@@ -1,0 +1,68 @@
+package review;
+
+import java.util.Scanner;
+
+public class BattleCity {
+
+	static int n, m;
+	static char[][] a ;
+	static int startX, startY, endX, endY;
+	static boolean[][] visited;
+	public static class Point{
+		 int x;
+		int y;
+		int step;
+		public Point(int x, int y, int step){
+			this.x = x;
+			this.y = y;
+			this.step = step;
+		}
+	}
+	
+	static int[][] d = {
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1}
+	};
+	
+	static int bfs(int startX, int startY, int endX, int endY){
+		Point[] q = new Point[n*m];
+		int front = 0;
+		int rear = 0;
+		q[rear] = new Point(startX, startY, 0);
+		visited[startX][startY] = true;
+		while ( front < rear){
+			Point cur = q[front];
+			front ++;
+			
+		}
+	}
+	
+	public static void main(String[] agrs){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			a = new char[n][m];
+			
+			sc.nextLine();
+			for ( int i=0; i<n; i++){
+				String s = sc.nextLine();
+				for ( int j=0; j<m; j++){
+					a[i][j] = s.charAt(j);
+					if ( a[i][j] == 'Y'){
+						startX = i;
+						startX = j;
+					}
+					else if ( a[i][j] =='T'){
+						endX = i;
+						endY = j;
+					}
+				}
+			}
+			
+		}
+	}
+}
