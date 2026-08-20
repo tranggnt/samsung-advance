@@ -1,0 +1,59 @@
+package review;
+
+import java.util.Scanner;
+
+public class Queen_MaximumScore {
+	
+	static boolean visited[][];
+	static int n;
+	static int[][] a;
+	
+	
+	static int max;
+	static boolean[] c1, c2, col;
+	public static void Queen(int i, int count){
+		
+		if ( i == 8 ){
+			if ( count > max) max = count;
+		}
+		for ( int j =0; j<8; j++){
+			if ( !col[j] && !c1[i+j] && !c2[i-j+8]){
+				col[j] = true;
+				c1[i+j] = true;
+				c2[i-j+8] = true;
+				Queen(i+1, count+a[i][j]);
+				col[j] = c1[i+j] = c2[i-j+8] = false;
+			}
+			
+		}
+	}
+	
+	public static void main(String[] agrs){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			System.out.println("Case #" + t);
+			
+			n = sc.nextInt();
+			for (int i =0; i<n; i++){
+				a = new int[8][8];
+				col = new boolean[50];
+				c1 = new boolean[50];
+				c2 = new boolean[50];
+				visited = new boolean[8][8];
+				max = Integer.MIN_VALUE;
+				for ( int x= 0; x<8; x++){
+					for ( int y = 0; y<8; y++){
+						a[x][y] = sc.nextInt();
+						col[y] = false;
+						c1[x+y] = false;
+						c2[x-y+8] = false;
+					}
+				}
+				Queen(0, 0);
+				System.out.println(max);
+			}
+		}
+	}
+
+}
