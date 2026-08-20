@@ -1,0 +1,109 @@
+package review;
+
+import java.util.Scanner;
+
+public class ChessRock {
+
+	static int n;
+	static char[][] a;
+	static int count;
+	static int max ;
+	
+	static boolean check( int row, int col){
+		if ( a[row][col] == 'X') {
+			return false;
+		}
+		for ( int j = col-1; j>=0; j--){
+			if ( a[row][j] =='X'){
+				break;
+			}
+			if (a[row][j] == 'R'){
+				return false;
+			}
+		}
+		
+		for ( int j = col+1; j<n; j++){
+			if ( a[row][j] == 'X'){
+				break;
+			}
+			if ( a[row][j] == 'R'){
+				return false;
+			}
+		}
+		
+		for ( int i = row -1; i>=0; i--){
+			if ( a[i][col] == 'X'){
+				break;
+			}
+			if ( a[i][col] == 'R'){
+				return false;
+			}
+		}
+		
+		for ( int i = row+1; i<n; i++){
+			if ( a[i][col] == 'X'){
+				break;
+			}
+			
+			if ( a[i][col] =='R'){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static void Try(int row, int  col){
+		if ( row == n){
+			if ( count > max ){
+				max = count;	
+			}
+			return;
+		}
+		
+		
+		
+		int nextRow = row;
+		
+		int nextCol = col + 1;
+		
+		if ( nextCol == n){
+			nextRow = row+1;
+			nextCol = 0;
+		}
+		
+		
+		Try(nextRow, nextCol);
+		
+		if ( check(row, col)){
+			a[row][col] = 'R';
+			count++;
+			Try(nextRow, nextCol);
+			a[row][col] = '.';
+			count--;
+		}
+	}
+	
+	public static void main(String[] agrs){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			n = sc.nextInt();
+			sc.nextLine();
+			count = 0;
+			max = Integer.MIN_VALUE;
+			a = new char[n][n];
+			for ( int i =0; i<n; i++){
+				String s = sc.nextLine();
+//				System.out.println(s);
+				for ( int j=0; j<n; j++){
+					a[i][j] = s.charAt(j);
+				}
+			}
+			
+			Try(0,0);
+			System.out.println("Case #" + t);
+			System.out.println(max);
+			
+		}
+	}
+}
