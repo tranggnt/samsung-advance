@@ -1,0 +1,54 @@
+package review;
+
+import java.util.Scanner;
+
+public class ArrayGame {
+	
+	static int[] prefix ;
+	static int n;
+	static int[] a;
+	
+	static int sum (int l, int r ){
+		return prefix[r+1] - prefix[l];
+	}
+	
+	static int solve( int l, int r){
+		if ( l >= r){
+			return 0;
+		}
+		
+		int total = sum(l, r);
+		
+		int leftSum = 0;
+		int max = 0;
+		for (int i=l; i<r; i++){
+			leftSum += a[i];
+			int rightSum = total - leftSum;
+			if ( leftSum == rightSum){
+				int leftPoint = solve(l, i);
+				int rightPoint = solve(i+1, r);
+				
+				int point = Math.max(leftPoint, rightPoint) + 1;
+				if ( point > max) max = point;
+			}
+		}
+		return max;
+	}
+	
+
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc =sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			a = new int[n];
+			prefix = new int[n+1];
+			for ( int i=0; i<n; i++){
+				a[i] = sc.nextInt();
+				prefix[i+1] = prefix[i] + a[i];
+			}
+			int ans = solve(0, n-1);
+			System.out.println(ans);
+		}
+	}
+}
