@@ -1,0 +1,57 @@
+package review;
+
+import java.util.Scanner;
+
+public class Painting {
+
+	static int n;
+	static int[][] a;
+	static int[] vung;
+	static int ans;
+	
+	static void Try( int i){
+		if ( i == n){
+			ans++;
+			return;
+		}
+		
+		boolean visited[] = new boolean[5];
+		for ( int j =0; j<n; j++){
+			if ( a[i][j] == 1 && vung[j]!=0){
+				int color = vung[j];
+				visited[color] = true;
+			}
+		}
+		
+		for ( int j = 1; j<=4; j++){
+			if ( !visited[j]){
+				vung[i] = j;
+				visited[j] = true;
+				Try(i+1);
+				vung[i] = 0;
+				visited[j] = false;
+			}
+		}
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			a = new int[n+5][n+5];
+			vung = new int[n];
+			for ( int i=0; i<n; i++){
+				vung[i] = 0;
+				for ( int j =0; j<n; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			ans =0;
+			Try(0);
+			System.out.println("Case #" + t);
+			System.out.println(ans);
+			
+		}
+	}
+}
