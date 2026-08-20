@@ -1,0 +1,96 @@
+package review;
+
+import java.util.Scanner;
+
+public class RouteFinding {
+	
+	public static class Stack<T>{
+		private Node<T> top;
+		
+		public static class Node<T>{
+			private Node<T> next;
+			private T data;
+			
+			
+			public Node(T value){
+				data= value;
+			}
+		}
+		
+		public boolean isEmpty(){
+			if (top==null) return true;
+			return false;
+		}
+		
+		public void push(T value){
+			Node<T> node = new Node<T>(value);
+			node.next = top;
+			top = node;
+		}
+		
+		public T pop(){
+			if (isEmpty()) throw new  StackOverflowError();
+			
+			T tmp = top.data;
+			top = top.next;
+			return tmp;
+		}
+		
+		public T peek(){
+			if (isEmpty()) throw new StackOverflowError();
+			return top.data;
+		}
+		
+		
+		
+	}
+	
+	//public static 
+	
+	public static void main (String agrs[]){
+		Scanner sc = new Scanner(System.in);
+		for (int tc = 1; tc<=10; tc++){
+			
+			int t = sc.nextInt();
+			int n = sc.nextInt();
+			boolean found = false;
+			
+			boolean[] visited= new boolean[105];
+			int[][] b = new int [105][105];
+			
+			for ( int i = 0; i<n; i++){
+				int x = sc.nextInt(); visited[x] = false;
+				int y = sc.nextInt(); visited[y] = false;
+				b[x][y] = 1;
+			}
+			
+			Stack<Integer> st = new Stack<Integer>();
+			
+			int u = 0;
+			visited[u]=true;
+			st.push(u);
+			
+			while(!st.isEmpty()){
+				if ( st.peek() == 99){
+					found = true;
+					break;
+				}
+				int a = st.pop();
+				for (int v = 0; v<100; v++){
+					if (b[a][v] == 1){
+						visited[v] = true;
+						st.push(v);
+					}
+				}
+			}
+			
+			if ( found == true) System.out.println("#" + tc +" " +"1");
+			else System.out.println("#" + tc +" " +"0");
+			
+			
+			
+			
+		}
+	}
+
+}
