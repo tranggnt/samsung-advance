@@ -1,0 +1,191 @@
+package review;
+
+import java.util.Scanner;
+
+public class FastRobot {
+	
+	public static class Node{
+		int x;
+		int y;
+		int dir;
+		int turn;
+		
+		public Node(int x, int y, int dir, int turn){
+			this.x = x;
+			this.y = y;
+			this.dir = dir;
+			this.turn = turn;
+		}
+	}
+	
+	public static class Queue{
+		Node[] q ;
+		int front ;
+		int rear;
+		
+		public Queue(){
+			q =new Node[100000];
+			front = 0 ;
+			rear = -1;
+		}
+		
+		public boolean isEmpty(){
+			return rear < front;
+		}
+		
+		public void push(Node p){
+			q[++rear] = p;
+		}
+		
+		public Node pop(){
+			return q[front++];
+		}
+	}
+	
+	
+	static int n, m;
+	static char[][] a;
+	
+	
+	static int[] dx = { 0, 0, 1, -1};
+	static int[] dy = { 1, -1, 0, 0};
+	
+	
+//	public static int bfs( int sx, int sy, int ex, int ey){
+//		
+//		Queue q = new Queue();
+//		if ( sx == ex && sy == ey) return 0;
+//		
+//		
+//		
+//		for ( int k=1; k<=4; k++){
+//			int nx = sx + dx[k];
+//			int ny = sy + dy[k];
+//			if ( nx <1 || nx >n || ny <1 || ny > m){
+//				continue;
+//			}
+//			
+//			if ( a[nx][ny] == '1') continue;
+//			
+//			d[nx][ny][k] = 0;
+//			
+//			Node p = new Node (nx, ny, k);
+//			q.push(p);		
+//		}
+//		
+//		while(!q.isEmpty()) {
+//			Node cur = q.pop();
+//			for ( int k =1; k<=4; k++){
+//				int nx = cur.x + dx[k];
+//				int ny = cur.y + dy[k];
+//				
+//				if ( nx <1 || nx >n || ny <1 || ny > m){
+//					continue;
+//				}
+//				
+//				if ( a[nx][ny] == 1) continue;
+//				
+//				int newD = d[cur.x][cur.y][cur.dir];
+//				
+//				if ( k!= cur.dir) newD ++;
+//				
+//				if ( newD < d[nx][ny][k]) d[nx][ny][k] = newD;
+//				
+//				Node np = new Node(nx, ny, k);
+//			}
+//		}
+//		
+//		int ans = Integer.MAX_VALUE;
+//		
+//				for ( int k = 1; k<=4; k++){
+//					if ( ans < d[ex][ey][k]){
+//						ans = d[ex][ey][k];
+//					}
+//				}
+//		
+//		if ( ans == Integer.MAX_VALUE) return -1;
+//		
+//		return ans ;
+//	}
+	
+	
+	public static int bfs( int sx, int sy, int ex, int ey){
+		
+		Queue q = new Queue();
+		
+		int[][] best = new int[n+5][m+5];
+		for ( int i=1; i<=n; i++){
+			for ( int j=1; j<=m; j++){
+				best[i][j] = Integer.MAX_VALUE;
+			}
+		}
+		
+		q.push(new Node(sx, sy, -1, 0));
+		
+		best[sx][sy] =0;
+		
+		while ( !q.isEmpty()){
+			Node cur = q.pop();
+				if ( cur.x == ex && cur.y==ey){
+					return cur.turn;
+				}
+				
+				for ( int k = 0; k<4; k++){
+					int nx = cur.x + dx[k];
+					int ny = cur.y + dy[k];
+					
+					if ( nx <1 || ny <1 || nx >n || ny > m){
+						continue;
+					}
+					
+					if ( a[nx][ny] == '1'){
+						continue;
+					}
+					
+					int newTurn = cur.turn;
+					
+					if ( newTurn != -1 && cur.dir != k){
+						newTurn++;
+					}
+					if ( newTurn < best[nx][ny]){
+						best[nx][ny] = newTurn;
+						q.push(new Node ( nx, ny, k, newTurn));
+					
+				}
+			}
+		}
+		return -1;
+	}
+	public static void main(String[] agrs) {
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<= tc; t++){
+			 m = sc.nextInt();
+			 n = sc.nextInt(); 
+			
+			int y1 = sc.nextInt();
+			int x1= sc.nextInt();
+			int y2 = sc.nextInt();
+			int x2= sc.nextInt();
+			sc.nextLine();
+			
+			a = new char[n+5][m+5];
+			
+				for ( int i=1; i<=n; i++){
+					String inp =sc.nextLine();
+					for ( int j =1; j<=m; j++){
+						a[i][j] = inp.charAt(j-1);
+					}
+				}
+				
+//				for ( int i=1; i<=n; i++){
+//					for ( int j =1; j<=m; j++){
+//						System.out.print(a[i][j] + " ");
+//					}
+//					System.out.println();
+//				}
+				
+				System.out.println(bfs(x1, y1, x2, y2));
+			}
+	}
+}
