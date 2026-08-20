@@ -2,67 +2,158 @@ package review;
 
 import java.util.Scanner;
 
-public class BattleCity {
-
-	static int n, m;
-	static char[][] a ;
-	static int startX, startY, endX, endY;
-	static boolean[][] visited;
-	public static class Point{
-		 int x;
-		int y;
-		int step;
-		public Point(int x, int y, int step){
-			this.x = x;
-			this.y = y;
-			this.step = step;
-		}
-	}
+public class HugoGold {
 	
+	static int n, g;
+	static int a[][];
+	static boolean[][] gold;
 	static int[][] d = {
 		{1, 0},
 		{-1, 0},
 		{0, 1},
 		{0, -1}
 	};
+	static int[][] count;
+	static int[][] max_cost;
+	static int[][] distance;
+	static int ans;
 	
-	static int bfs(int startX, int startY, int endX, int endY){
-		Point[] q = new Point[n*m];
-		int front = 0;
-		int rear = 0;
-		q[rear] = new Point(startX, startY, 0);
-		visited[startX][startY] = true;
-		while ( front < rear){
-			Point cur = q[front];
-			front ++;
-			
+	public static class Point{
+		int x;
+		int y;
+		int cost;
+		
+		public Point(int x, int y, int cost){
+			this.x = x;
+			this.y = y;
+			this.cost = cost;
+		}
+		
+		public Point(int x, int y){
+			this.x = x;
+			this.y = y;
+			this.cost = 0;
 		}
 	}
 	
-	public static void main(String[] agrs){
+	public static void bfs(int x, int y){
+		Point[] q = new Point[n*n];
+		int front = 0;
+		int rear = 0;
+		q[rear] = new Point(x, y);
+		rear++;
+		while ( front < rear){
+			Point cur = q[front];
+			front ++;
+			for ( int c[] : d){
+				int nx = cur.x+c[0];
+				int ny = cur.y+c[1];
+				
+				if ( nx <=0 || ny <=0 || nx > n || ny >n) continue;
+				if ( a[nx][ny] == 0) continue;
+				if ( distance[nx][ny] != -1) continue;// da tham 
+				count[nx][ny] ++;
+				distance[nx][ny] = cur.cost+1;
+				//distance[nx][ny] = distance[cur.x][cur.y] + 1;
+				q[rear] = new Point(nx, ny, distance[nx][ny]);
+				rear++;
+			}
+		}
+		return;
+		
+	}
+	
+	public static void resetDistance(){
+		for ( int i1 = 1; i1<=n; i1++){
+			for ( int j1=1; j1<=n; j1++){
+				distance[i1][j1] = -1;
+			}
+		}
+	}
+	
+	public static void main(String[] args){
 		Scanner sc = new Scanner(System.in);
 		int tc = sc.nextInt();
-		for ( int t =1; t<=tc; t++){
+		for ( int t = 1; t<=tc ;t++){
+			count = new int[105][105];
+			max_cost = new int[105][105];
+			distance = new int[105][105];
+			ans = Integer.MAX_VALUE;
 			n = sc.nextInt();
-			m = sc.nextInt();
-			a = new char[n][m];
+			a = new int[n+5][n+5];
+			gold = new boolean[n+5][n+5];
+			g = sc.nextInt();
+			Point[] goldPos = new Point[g];
+			int idx =0;
+			for ( int i=0; i<g; i++){
+				int x = sc.nextInt();
+				int y = sc.nextInt();
+				gold[x][y] = true;
+				goldPos[idx] = new Point(x, y);
+				idx++;
+			}
 			
-			sc.nextLine();
-			for ( int i=0; i<n; i++){
-				String s = sc.nextLine();
-				for ( int j=0; j<m; j++){
-					a[i][j] = s.charAt(j);
-					if ( a[i][j] == 'Y'){
-						startX = i;
-						startX = j;
-					}
-					else if ( a[i][j] =='T'){
-						endX = i;
-						endY = j;
+			for ( int i=1; i<=n; i++){
+				for ( int j = 1; j<=n; j++){
+					a[i][j] = sc.nextInt();
+					max_cost[i][j] = -1;
+					count[i][j] = 0;
+				}
+			}
+			
+			for ( int i = 1; i<=n; i++){
+				for ( int j =1; j<=n; j++){
+					if ( gold[i][j] == true){
+						resetDistance();
+						distance[i][j] = 0;
+						bfs(i,j);
+						for ( int i1= 1; i1<=n; i1++){
+							for ( int j1=1; j1<=n; j1++){
+								max_cost[i1][j1] = Math.max(max_cost[i1][j1], distance[i1][j1]);
+							}
+						}
 					}
 				}
 			}
 			
+			int cur = 0;
+			for ( int i =1; i<=n; i++){
+				for ( int j=1;j<=n; j++){
+					if ( count[i][j] > cur) cur = count[i][j];
+				}
+			}
+			
+			int i1 = 0;
+			int j1 = 0;
+			
+			for ( int i=1; i<=n; i++){
+				for ( int j=1; j<=n; j++){
+					if ( count[i][j] == cur){
+						if ( max_cost[i][j] < ans && max_cost[i][j] != 0){
+							ans = max_cost[i][j];
+							i1 = i;
+							j1= j;
+						}
+					}
+				}
+			}
+			
+			if ( ans == Integer.MAX_VALUE) ans = -1;
+			System.out.println("Case #" + t);
+			System.out.println(ans);
+			if ( ans != -1){
+				resetDistance();
+				bfs(i1, j1);
+				for ( int i=0; i<g; i++){
+					if ( gold[goldPos[i].x][goldPos[i].y] && distance[goldPos[i].x][goldPos[i].y]==-1){
+						System.out.println(goldPos[i].x + " " + goldPos[i].y);
+					}
+				}
+				
+			}
+			
+			
 		}
 	}
+
 }
