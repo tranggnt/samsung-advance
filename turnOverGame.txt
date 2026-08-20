@@ -1,0 +1,104 @@
+package review;
+
+import java.util.Scanner;
+
+public class TurnOverGame {
+	
+	
+	static int[][] a;
+	static int[] dx = {-1, 1, 0, 0, 0};
+	static int[] dy = {0, 0, 1, -1, 0};
+	
+	static int[] bi = new int[16];
+	static int min;
+	
+	static boolean check(){
+		int tmp = a[0][0];
+		for ( int i=0; i<4; i++){
+			for ( int j = 0; j<4; j++){
+				if ( a[i][j] != tmp){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	static void changeColor(int x,int y){
+		for ( int k =0; k<5; k++){
+			int nx = x + dx[k];
+			int ny = y + dy[k];
+			if ( nx >=0 && ny >=0 && nx <4 && ny <4){
+				a[nx][ny] = 1- a[nx][ny];
+			}
+		}
+	}
+	
+	static void sinh ( int i){
+		if ( i == 16){
+			int cnt = 0;
+			for ( int j=0; j<16; j++){
+				if ( bi[j] == 1){
+					int x = j/4;
+					int y = j%4;
+					changeColor(x, y);
+					cnt ++;
+				}
+			}
+			if ( check()){
+				if ( cnt < min){
+					min = cnt;
+				}
+			}
+			//back ve trang thai cu
+			for ( int j=0; j<16; j++){
+				if ( bi[j] == 1){
+					int x = j/4;
+					int y = j%4;
+					changeColor(x, y);
+				}
+			}
+			return;
+		}
+		
+		for ( int j =0; j<=1; j++){
+			bi[i] = j;
+			sinh(i+1);
+		}
+		
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		sc.nextLine();
+		for ( int t = 1; t<=tc; t++){
+			a = new int[4][4];
+			bi = new int[16];
+			min = Integer.MAX_VALUE;
+			for (int i=0; i<4; i++){
+				String s = sc.nextLine();
+				for( int j=0; j<4; j++){
+					if ( s.charAt(j) == 'b'){
+						a[i][j] = 1;
+					}else {
+						a[i][j] = 0;
+					}
+				}
+			}
+			
+			sinh(0);
+			if ( min == Integer.MAX_VALUE){
+				System.out.println("Case #" + t);
+				System.out.println("impossible");
+			}
+			else {
+				System.out.println("Case #" + t);
+				System.out.println(min);
+			}
+		}
+		
+		
+	}
+
+}
