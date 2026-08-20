@@ -1,0 +1,113 @@
+package review;
+
+import java.awt.print.Book;
+import java.util.Scanner;
+
+public class PizzaLocation {
+	
+	public static class PointM{
+		public int x;
+		public int y;
+		
+		public PointM(int x, int y){
+			this.x = x;
+			this.y = y;
+		}
+		
+	}
+	
+	public static class  PointN{
+		public int x;
+		public int y;
+		public int s;
+		
+		public PointN(int x, int y, int s){
+			this.x = x;
+			this.y = y;
+			this.s = s;
+		}
+	}
+	
+	public static int k, r;
+	static int m, n;
+	static PointM[] am;
+	static PointN[] an;
+	static boolean visited[];
+	static int ans;
+	static PointM[] a;
+	
+	
+	static boolean checkDis(PointM p1, PointN p2){
+		double x1 = p1.x;
+		double x2 = p2.x;
+		double y1 = p1.y;
+		double y2 = p2.y;
+		
+		double dis = Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
+		if ( dis <= (double)(r)){
+			return true;
+		}
+		return false;
+	}
+	
+	static void Try( int i, int idx){
+		if ( i==k){
+			int res = 0;
+			visited = new boolean[n];
+			for ( int v = 0; v< n; v++) visited[v] = false;
+			for ( int j =0; j<k; j++){
+				for ( int c =0; c<n; c++){
+					if ( !visited[c] && checkDis(a[j], an[c])){
+						res += an[c].s;
+						visited[c] = true;
+					}
+				}
+			}
+			if ( ans < res) ans = res;
+			return;
+		}
+		
+		if ( idx == m) return;
+		
+		a[i] = am[idx];
+		Try(i+1, idx+1);
+		
+		Try(i, idx+1);
+		
+		
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc =sc.nextInt();
+		for ( int t = 1; t<=tc ;t++){
+			k = sc.nextInt();
+			r= sc.nextInt();
+			m = sc.nextInt();
+			am = new PointM[m];
+			a = new PointM[m];
+			
+			for ( int i = 0; i<m; i++){
+				int x = sc.nextInt();
+				int y = sc.nextInt();
+				am[i] = new PointM(x, y);
+			}
+			
+			n = sc.nextInt();
+			an = new PointN[n];
+			
+			for ( int i=0; i<n; i++){
+				int x = sc.nextInt();
+				int y = sc.nextInt();
+				int s = sc.nextInt();
+				an[i] = new PointN(x, y, s);
+			}
+			
+			ans = 0;
+			Try(0,0);
+			
+			System.out.println("#" + t+ " " + ans);
+		}
+	}
+
+}
