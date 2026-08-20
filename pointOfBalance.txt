@@ -1,0 +1,60 @@
+package review;
+
+import java.util.Scanner;
+
+public class PointOfBalance {
+	
+	static double[] a;
+	static double[] m;
+	static int n;
+	
+	static double cal(double p){
+		double left =0, right = 0;
+		for ( int i=0; i<n; i++){
+			double d = p - a[i];
+			if ( d > 0 ){
+				left += m[i] / (d*d);
+			}else{
+				right += m[i]/(d*d);
+			}
+		}
+		return left - right;
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		
+		for (int t =1; t<=10; t++){
+			
+			n = sc.nextInt();
+			a= new double[n+5];
+			m = new double[n+5];
+			System.out.print("#"+t+" ");
+			for ( int i=0; i<n; i++){
+				a[i] = sc.nextInt();
+				
+			}
+			for ( int i=0; i<n; i++){
+				
+				m[i] = sc.nextInt();
+			}
+			double mid = 0;
+			for ( int i=0; i<n-1; i++){
+				double left = a[i];
+				double right = a[i+1];
+				
+				for ( int j=0; j<200; j++){
+					mid = (left + right ) / 2;
+					if ( cal(mid) == 0.0) break;
+					if ( cal(mid) > 0) left = mid;
+					else right = mid;
+				}
+				
+				String ans = String.format("%.10f", mid);
+				System.out.print(ans + " ");
+				
+			}
+			System.out.println();		
+		}
+	}
+}
