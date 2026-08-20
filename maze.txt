@@ -1,0 +1,62 @@
+package review;
+
+import java.util.Scanner;
+
+	
+
+public class Maze2 {
+	public static int [][] d = {
+	{0,-1},
+	{0,1},
+	{1,0},
+	{-1,0}
+	};
+	
+	public static boolean[][] visited = new boolean[105][105];
+	public static boolean found;
+	public static void Find(int a[][], int x, int y){
+		if ( x<0 || x > 100 || y < 0 || y > 100 || visited[x][y] == true || found == true || a[x][y] == 1){
+			return;
+		}
+		visited[x][y] = true;
+		if ( a[x][y] == 3 ){
+			found = true;
+			return;
+		}
+		for ( int[] b:d){
+			Find(a, x+b[0], y+b[1]);
+		}
+		visited[x][y] = false;
+		
+	}
+	
+	public static void main(String args[]){
+		Scanner sc = new Scanner(System.in);
+		for ( int tc = 1; tc <=10; tc++){
+			int t = sc.nextInt();
+			sc.nextLine();
+			int [][] a = new int[105][105];
+			found=false;
+			int stX =0, stY=0;
+			for ( int i = 0; i<100; i++){
+				String s = sc.nextLine();
+				for ( int j = 0; j<100; j++){
+					int c = Integer.valueOf(Character.toString((char)(s.charAt(j))));
+					a[i][j] = c;
+					visited[i][j] = false;
+					if (a[i][j] == 2){
+						stX = i;
+						stY = j;
+					}
+				}
+			}
+			
+			Find(a, stX, stY);
+			if ( found == true ){
+				System.out.println("#" + tc + " " + 1);	
+			}else System.out.println("#" + tc + " " + 0);
+		}
+	}
+	
+
+}
