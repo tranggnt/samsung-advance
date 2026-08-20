@@ -1,0 +1,262 @@
+package prac0812prac;
+
+import java.util.Scanner;
+
+class Pairr {
+	public int x;
+	public int y;
+	public int step;
+	
+	public Pairr (int x, int y, int step) {
+		this.x = x;
+		this.y = y;
+		this.step = step;
+	}
+}
+
+class Queuee {
+	public Pairr[] q;
+	public int rear;
+	public int front;
+	
+	public Queuee () {
+		q = new Pairr[2000000];
+		rear = -1;
+		front = 0;
+	}
+	
+	public void push (Pairr p) {
+		q[++rear] = p;
+	}
+	
+	public Pairr pop () {
+		return q[front++];
+	}
+	
+	public boolean isEmpty() {
+		return front > rear;
+	}
+}
+abc
+public class BattleCity {
+	
+	public static int[] dx = {-1,1,0,0};
+	public static int[] dy = {0,0,-1,1};
+	
+	public static void main (String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int t = sc.nextInt();
+		for (int pp = 1 ; pp <= t ; pp++) {
+			int n = sc.nextInt();
+			int m = sc.nextInt();
+			sc.nextLine();
+			int thuong = 0;
+			int[][] a = new int[n][m];
+			int[][] dist = new int[n][m];
+			int xx = -1;
+			int yy =-1;
+			int targetX = -1;
+			int targetY = -1;
+			
+			for (int i = 0 ; i < n ; i++) {
+				String s = sc.nextLine();
+				
+				for (int j = 0 ; j < m ; j++) {
+					dist[i][j] = Integer.MAX_VALUE;
+					char tmp = s.charAt(j);
+					if (tmp == 'Y') {
+						xx = i;
+						yy = j;
+						a[i][j] = 0;
+					} else if (tmp == 'S' || tmp == 'R') {
+						a[i][j] = -1;
+					} else if (tmp == 'T') {
+						targetX = i;
+						targetY = j;
+						a[i][j] = 3;
+					} else if (tmp == 'E') {
+						a[i][j] = 1;
+					} else if (tmp == 'B') {
+						a[i][j] = 2;
+					}
+				}
+			}
+			
+			Queuee q = new Queuee();
+			Pairr start = new Pairr(xx,yy,0);
+			q.push(start);
+			dist[xx][yy] = 0;
+			
+			int ans = Integer.MAX_VALUE;
+			
+			while (!q.isEmpty()) {
+				Pairr res = q.pop();
+				
+				if (res.x == targetX && res.y == targetY) {
+					if (res.step < ans) {
+						ans = res.step;
+					}
+					continue;
+				}
+				
+				if (res.step >= ans) continue;
+				
+				if (res.step > dist[res.x][res.y]) continue;
+				
+				for (int i = 0 ; i < 4 ; i++) {
+					int x = res.x + dx[i];
+					int y = res.y + dy[i];
+					
+					if (x >= 0 && x < n && y >=0 && y < m) {
+						if (a[x][y]==-1) {
+							continue;
+						}
+						
+						int cost = -1;
+						if (a[x][y]== 2) {
+							cost = 2;
+						} else { // 1-3
+							cost = 1;
+						}
+						
+						int nextStep = res.step + cost;
+						
+						if (nextStep < dist[x][y]) {
+							dist[x][y] = nextStep;
+							q.push(new Pairr(x,y,nextStep));
+						}
+					}
+				}
+				
+			}
+			System.out.println("Case #" + pp);
+			if (ans == Integer.MAX_VALUE) {
+				System.out.println("-1");
+			} else {
+				System.out.println(ans);
+			}
+		}
+	}
+}
+package review;
+
+import java.util.Scanner;
+
+public class BattleCity {
+
+	static int n, m, ans;
+	static char[][] a ;
+	static int startX, startY, endX, endY;
+	static boolean[][] visited;
+	static int [][] dis;
+	public static class Point{
+		 int x;
+		int y;
+		int step;
+		public Point(int x, int y, int step){
+			this.x = x;
+			this.y = y;
+			this.step = step;
+		}
+	}
+	
+	static int[][] d = {
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1}
+	};
+	
+	static void bfs(int startX, int startY, int endX, int endY){
+		Point[] q = new Point[n*m];
+		int front = 0;
+		int rear = 0;
+		q[rear] = new Point(startX, startY, 0);
+		rear++;
+		//visited[startX][startY] = true;
+		dis[startX][startY] = 0;
+		while ( front < rear){
+			Point cur = q[front];
+			front ++;
+			for ( int c[] : d){
+				int nx = cur.x + c[0];
+				int ny = cur.y + c[1];
+				
+				if ( nx == endX && ny == endY){
+					if (cur.step+1 < ans){
+						ans = cur.step+1;
+					}
+					continue;
+				}
+				
+				if ( cur.step+1 >= ans ) continue;
+				
+				if ( cur.step+1 > dis[cur.x][cur.y]) continue;
+				
+				
+				if (nx >= 0 && ny >=0 && nx < n && ny <m){
+					if ( a[nx][ny] == 'R' || a[nx][ny] == 'S'){
+						continue;
+					}
+				}
+				
+				
+				if (nx >= 0 && ny >=0 && nx < n && ny <m ){
+					if ( a[nx][ny] == 'B' ){
+						int step = cur.step+2;
+						if ( step < dis[nx][ny]){
+							q[rear] = new Point(nx, ny, step);
+							rear++;
+						}
+					}
+					else if ( a[nx][ny] == 'E'){
+						int step = cur.step+1;
+						if (step < dis[nx][ny]){
+							q[rear] = new Point(nx, ny, step);
+							rear++;
+						}
+					}
+				}
+			}
+		}
+	}
+	// /y b e r s
+	public static void main(String[] agrs){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			a = new char[n][m];
+			dis = new int[n][m];
+			sc.nextLine();
+			
+			for ( int i=0; i<n; i++){
+				String s = sc.nextLine();
+				//System.out.println(s);
+				for ( int j=0; j<s.length(); j++){
+					a[i][j] = s.charAt(j);
+					if ( a[i][j] == 'Y'){
+						startX = i;
+						startX = j;
+					}
+					else if ( a[i][j] =='T'){
+						endX = i;
+						endY = j;
+					}
+				}
+			}
+			
+			ans = Integer.MAX_VALUE;
+			bfs(startX, startY, endX, endY);
+			if ( ans == Integer.MAX_VALUE){
+				System.out.println("Case #" + t);
+				System.out.println(-1);
+			}
+			else {
+				System.out.println("Case #" + t);
+				System.out.println(ans);
+			}
+		}
+	}
+}
