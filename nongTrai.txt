@@ -1,0 +1,69 @@
+package review;
+
+import java.util.Scanner;
+
+public class NongTrai {
+	
+	static int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
+	static int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
+	static boolean[][] visited;
+	static int n, m;
+	static int[][] a;
+
+	static boolean check = true;
+	
+	public static void dfs(int i, int j){
+		visited[i][j] = true;
+		
+		for ( int k = 0; k<8; k++ ){
+			int nx = i+dx[k];
+			int ny = j+dy[k];
+			if (nx <0 || nx >=n || ny < 0 || ny >= m || a[nx][ny] == 0){
+				continue;
+			}
+			if ( a[nx][ny] > a[i][j]){
+				check = false;
+			}
+			if ( a[nx][ny] == a[i][j] && !visited[nx][ny]){
+				dfs(nx, ny);
+			}
+		}
+	}
+	
+	
+
+	public static void main(String[] agrs){
+		Scanner sc = new Scanner(System.in);
+		
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			a = new int[n+5][m+5];
+			visited = new boolean[n+5][m+5];
+			for ( int i =0; i<n; i++){
+				for ( int j =0; j<m; j++){
+					a[i][j] = sc.nextInt();
+					visited[i][j] = false;
+				}
+			}
+			int ans = 0;
+			
+			for ( int i=0; i<n; i++){
+				for ( int j =0; j<m; j++){
+					if (a[i][j] != 0 && visited[i][j] == false){
+						check = true;
+						dfs(i,j);
+						if ( check){
+							ans ++;
+						}
+					}
+					
+				}
+			}
+			System.out.println("#" + t + " "+ ans);
+			
+			
+		}
+	}
+}
