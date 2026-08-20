@@ -1,0 +1,169 @@
+package review;
+
+import java.util.Scanner;
+
+public class CleaningRobot {
+
+	static int n, m, startX, startY, ans;
+	static int[][] a;
+	static int clean, total;
+	static boolean visited[][];
+	static int[][] dis;
+	static Point[] map;
+	
+	
+	static int[][] d = {
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1}
+	};
+	
+	public static class Point{
+		private int x;
+		private int y;
+		private int step;
+		
+		Point(int x, int y, int step){
+			this.x = x;
+			this.y=y;
+			this.step = step;
+		}
+	}
+	
+	
+	public static int[][] bfs(Point p){
+		int[][] distance = new int[n+5][m+5];
+		for ( int i=0; i<n; i++){
+			for ( int j= 0; j<m; j++){
+				distance[i][j] = -1;
+			}
+		}
+		
+		visited = new boolean[n][m];
+		
+		Point[] q = new Point[n*m];
+		
+		int front = 0, rear = 0;
+		
+		q[rear] = new Point(p.x, p.y, p.step);
+		rear ++;
+		
+		visited[p.x][p.y] = true;
+		distance[p.x][p.y] = 0;
+		
+		while ( front < rear){
+			Point cur = q[front];
+			front ++;
+			
+			for ( int c[] : d){
+				int nx = cur.x+c[0];
+				int ny = cur.y+c[1];
+				
+				if ( nx >=0 && ny >=0 && nx <n && ny<m && !visited[nx][ny] && a[nx][ny] != 2){
+					distance[nx][ny] = cur.step + 1;
+					q[rear] = new Point(nx, ny, cur.step+1);
+					rear++;
+					visited[nx][ny] = true;
+				}
+			}
+			
+		}
+		return distance;
+		
+	}
+	
+	static boolean[] used;
+	static int min ;
+	static int[] x;
+	public static void Try(int i, int totalStep){
+		if ( i == total){
+			if ( totalStep < min){
+				min = totalStep;
+			}
+			return;
+		}
+		
+		if (totalStep > min) return;
+		
+			for ( int j=1; j<total; j++){
+				if ( !used[j] ){
+					x[i] = j;
+					used[j] = true;
+					//System.out.println("check " + i +" " + j );
+					Try(i+1, totalStep+dis[x[i-1]][j]);
+					used[j] = false;
+				}
+			}
+		}
+	
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc ;t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			a = new int [n][m];
+			clean = 0;
+			//visited = new boolean[n+5][m+5];
+			for ( int i=0; i<n; i++){
+				for ( int j=0; j<m; j++){
+					a[i][j] = sc.nextInt();
+					 if ( a[i][j] == 1){
+						clean++;
+					}
+				}
+			}
+			
+			int index = 1;
+			map = new Point[clean+1];
+			for ( int i=0; i<n ;i++){
+				for ( int j= 0; j<m; j++){
+					if ( a[i][j] == 3){
+						map[0] = new Point(i, j, 0);
+					} else if ( a[i][j] == 1){
+						map[index] = new Point(i, j, 0);
+						index++;
+					}
+				}
+			}
+			
+			total = clean + 1;
+			
+			dis = new int[total][total];
+			
+			for ( int i =0; i<total; i++){
+				int[][] distance = bfs(map[i]);
+				for ( int j=0; j<total; j++){
+					dis[i][j] = distance[map[j].x][map[j].y];
+					//System.out.println("check " + i + " " + j + " " +  dis[i][j] );
+				}
+			}
+			
+			boolean possible = true;
+			
+			for ( int i=0; i<total; i++){
+				if (dis[0][i] == -1) possible = false;
+			}
+			
+			if ( !possible){
+				System.out.println("Case #" + t);
+				System.out.println(-1);
+				continue;
+			}
+			
+			used = new boolean[total];
+			for ( int i =1; i<total; i++){
+				used[i]= false;
+			}
+			x = new int[total];
+			min=Integer.MAX_VALUE;
+			x[0] = 0;
+			Try(1,0);
+			
+				System.out.println("Case #" + t);
+				System.out.println(min);
+			}
+	}
+}
