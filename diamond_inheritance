@@ -1,0 +1,68 @@
+package review;
+
+import java.util.Scanner;
+
+public class Diamond {
+	
+	static int n;
+	static int[][] graph;
+	static boolean[] visited;
+	static int[] dinh;
+	static int[][] ke;	
+
+	
+	static boolean dfs(int u){
+		
+		for ( int i = 1; i<=dinh[u]; i++){
+			
+			int next = ke[u][i];
+			
+			if ( visited[next]){
+				return true;
+			}
+			visited[next] = true;
+			
+			if ( dfs(next)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static void main(String[] agrs){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			n = sc.nextInt();
+			dinh = new int [n+5];
+			ke = new int[n+5][n+5];
+			
+			for ( int i =1; i<=n; i++){
+				dinh[i] = sc.nextInt();
+				for ( int j=1; j<=dinh[i]; j++){
+					ke[i][j] = sc.nextInt();
+				}
+			}
+			boolean hasDiamond = false;
+			
+			for ( int u =1; u<=n; u++){
+				visited = new boolean[n+1];
+				visited[u] = true;
+				if ( dfs(u)){
+					hasDiamond = true;
+					break;
+				}
+			}
+			
+			if ( hasDiamond){
+				System.out.println("Case #" + t);
+				System.out.println("Yes");
+			}
+			else{
+				System.out.println("Case #" + t);
+				System.out.println("No");
+			}
+		}
+	}
+
+}
