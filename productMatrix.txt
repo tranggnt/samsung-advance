@@ -1,0 +1,60 @@
+package review;
+
+import java.util.Scanner;
+
+public class ProductMatrix {
+	
+	static long a, b, c, k;
+	
+	public static long fn(long n){
+		long log2n = (long) Math.floor(Math.log(n)/Math.log(2));
+		return a*n + b*n*log2n + c*n*n*n; 
+	}
+	
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			a = sc.nextLong();
+			
+			b = sc.nextLong();
+			
+			c = sc.nextLong();
+			
+			k = sc.nextLong();
+			
+			
+			
+			
+			long left = 0;
+			long right = (long)Math.pow(2, 64);
+			
+			if ( b==0 && c ==0) right = k;
+			else if ( c == 0) right = k/2;
+			else right = (long)Math.pow(2, 20);
+			
+			long ans = 0;
+			
+			while (left <= right){
+				long mid = (left + right) /2;
+				
+				if ( fn(mid) == k ) {
+					ans = mid;
+					break;
+				}
+				
+				else if ( fn(mid) < k ){
+					left = mid +1;
+				}
+				else{
+					right = mid-1;
+				}
+				
+			}
+			System.out.println(ans);
+			
+		}
+	}
+
+}
