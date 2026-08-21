@@ -55,3 +55,121 @@ Output
 2 0 1
 
 3 1 2
+
+
+package review;
+
+import java.util.Scanner;
+
+public class LangMac {
+
+	static int n;
+	static int[][] a;
+	static boolean[] visited;
+	static int bridge;
+	static int[] tin;
+	static int[] low;
+	static int timer;
+	
+	
+	public static void dfs(int u){
+		visited[u] = true;
+		for ( int i=0; i<n; i++){
+			if ( a[u][i] == 1 && !visited[i]){
+				dfs(i);
+			}
+		}
+		return;
+	}
+	
+	public static void dfs(int u, int p){
+		visited[u] = true;
+		tin[u] = low[u] = timer++;
+		
+		for ( int v=0; v<n; v++){
+			
+			if ( a[u][v] == 1 && v == p)continue;
+			
+			if ( a[u][v] == 1 && visited[v] == true ){
+				low[u] = Math.min(low[u], tin[v]);
+			}else{
+				
+				dfs(v,u);
+				
+				low[u] = Math.min(low[u], low[v]);
+				
+				if ( low[v] > tin[u]){
+					bridge++;
+				}
+			}
+		}
+		
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t=1; t<=tc; t++){
+			n = sc.nextInt();
+			a= new int[n+5][n+5];
+			visited = new boolean[n+5];
+			for ( int i=0; i<n; i++){
+				visited[i] = false;
+				for ( int j=0; j<n; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			int vung = 0;
+			int lang = 0;
+			int cau = 0;
+			
+			for ( int i=0; i<n; i++){
+				if ( !visited[i]){
+					vung++;
+					dfs(i);
+				}
+			}
+			
+			for ( int i=0; i<n; i++){
+				int sum = 0;
+				for ( int j=0; j<n; j++){
+					sum += a[i][j];
+				}
+				if (sum == 0) lang++;
+			}
+			
+//			for ( int i=0; i<n; i++){
+//				
+//				for ( int j=0; j<n; j++){
+//					if ( a[i][j] == 1){
+//						int tmp = 0;
+//						a[i][j] = 0;
+//						visited = new boolean[n+5];
+//						for ( int i1 = 0; i1<n; i1++){
+//							if (!visited[i1]){
+//								tmp++;
+//								dfs(i1);
+//							}
+//						}
+//						a[i][j] = 1;
+//						if ( tmp > vung) cau++;
+//				
+//					
+//					
+//				}
+//				
+//			}
+			bridge = 0;
+			timer = 0;
+			tin = new int[n+1];
+			low = new int[n+1];
+			visited = new boolean[n+1];
+			for ( int i=0; i<n; i++){
+				dfs(i,-1);
+			}
+			
+			System.out.println(vung + " " + lang + " " + bridge);
+		}
+	}
+}
+
