@@ -65,3 +65,97 @@ Output
 2
 
 3
+
+
+package review;
+
+import java.util.Scanner;
+
+public class QuanTuong {
+	
+	static int n, m, p , q, s, t;
+	
+	static int [][] d = {
+		{-1, -1},
+		{1, -1},
+		{-1, 1},
+		{1, 1}
+	};
+	static int[][] a;
+	static int[][] visited;
+	
+	public static class Point{
+		int x;
+		int y;
+		//int step;
+		public Point(int x, int y){
+			this.x = x;
+			this.y = y;
+			//this.step = step;
+		}
+	}
+	
+	public static void bfs (){
+		Point[] queue = new Point[n*n];
+		int front = 0;
+		int rear = 0;
+		queue[rear] = new Point(p, q);
+		rear++;
+		visited[p][q] = 0;
+		while (front < rear){
+			Point cur = queue[front];
+			front++;
+			for ( int c[] : d){
+				int nx = cur.x+c[0];
+				int ny = cur.y+c[1];
+				
+				while ( nx >=1 && ny >=1 && nx <=n && ny <=n && a[nx][ny]!= 1 ){
+					if ( visited[nx][ny] == -1){
+						visited[nx][ny] = visited[cur.x][cur.y]+1;
+						queue[rear] = new Point (nx, ny);
+						rear++;
+						nx = nx +c[0];
+						ny = ny +c[1];
+					}
+					else{
+						nx = nx +c[0];
+						ny = ny +c[1];
+					}
+				}
+			}
+		}
+	}
+	
+	public static void main( String[] args){
+		
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int tt = 1; tt<=tc; tt++){
+			n = sc.nextInt();
+			a = new int[n+1][n+1];
+			visited = new int[n+1][n+1];
+			for ( int i=1; i<=n; i++){
+				for ( int j=1; j<=n; j++){
+					a[i][j] = 0;
+					visited[i][j] = -1;
+				}
+			}
+			m = sc.nextInt();
+			p = sc.nextInt();
+			q = sc.nextInt();
+			s = sc.nextInt();
+			t = sc.nextInt();
+			for ( int i=0; i<m; i++){
+				int x = sc.nextInt();
+				int y = sc.nextInt();
+				a[x][y] = 1;
+			}
+			bfs();
+			System.out.println(visited[s][t]);
+			
+		}
+	}
+
+}
+
+
