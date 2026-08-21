@@ -215,7 +215,6 @@ public class QuaCau {
 	
 	public static void Try( int x, int y, int van, int total){
 		if ( x ==0 ){
-			ans = -1;
 			if ( ans < total) ans = total;
 			return;
 		}
@@ -254,9 +253,9 @@ public class QuaCau {
 					a[i][j] = sc.nextInt();
 				}
 			}
-			startX = n-1 ;
+			startX = n ;
 			startY = 2;
-			
+			ans = -1;
 			Try(startX, startY, 1, 0);
 			System.out.println("#" + t + " " + ans);
 			
