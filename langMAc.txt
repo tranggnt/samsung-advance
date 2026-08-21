@@ -84,9 +84,11 @@ public class LangMac {
 	
 	public static void dfs(int u, int p){
 		visited[u] = true;
-		tin[u] = low[u] = timer++;
+		tin[u] = low[u] = ++timer;
 		
 		for ( int v=0; v<n; v++){
+			
+			if (a[u][v] == 0) continue;
 			
 			if ( a[u][v] == 1 && v == p)continue;
 			
