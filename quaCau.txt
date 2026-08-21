@@ -179,3 +179,113 @@ Output
 
 
 #3 0
+
+package review;
+
+import java.util.Scanner;
+
+public class QuaCau {
+
+	static int n, startX, startY;
+	static int[][] a;
+	
+	static int [][] d = {
+		{-1, 0},
+		{-1, -1},
+		{-1, 1}
+	};
+	
+	public static class Point{
+		int x;
+		int y;
+		int total;
+		int van;
+		public Point(int x, int y,int van, int total){
+			this.x = x;
+			this.y = y;
+			this.van = van;
+			this.total = total;
+		}
+	}
+	
+	
+	static boolean[][] visited;
+	static int ans;
+
+	
+	
+	public static void bfs(){
+	
+		Point[] q = new Point[n*100];
+		int rear = 0;
+		int front = 0;
+		q[rear]=new Point(startX, startY,1, 0);
+		rear++;
+		visited[startX][startY] = true;
+		
+		while ( front < rear){
+			Point cur = q[front];
+			front++;
+			
+			if ( cur.x == 0){
+				if ( cur.total > ans) ans = cur.total;
+				return;
+			}
+			
+			for ( int c[]:d){
+				int nx = cur.x+c[0];
+				int ny = cur.y+c[1];
+				
+				if ( nx<0 || ny<0 || nx >n-1 || ny>4 || visited[nx][ny] == true){
+					continue;
+				}
+				if (a[nx][ny] == 2 && cur.van==0 ){
+					continue;
+				}
+				
+				if ( a[nx][ny] == 1){
+					visited[nx][ny] = true;
+					System.out.println("check 1 " + nx + " " + ny + " " + (cur.total+1));
+					q[rear] = new Point(nx, ny, cur.van, cur.total+1);
+					rear++;
+				}else if ( a[nx][ny] == 0){
+					visited[nx][ny] = true;
+					q[rear] = new Point(nx, ny, cur.van, cur.total);
+					System.out.println("check 0 " + nx + " " + ny + " " + cur.total);
+					rear++;
+				}else if ( a[nx][ny] == 2 ){
+					visited[nx][ny] = true;
+					q[rear] = new Point(nx, ny, 0, cur.total);
+					System.out.println("check 2 " + nx + " " + ny + " " + cur.total);
+					rear++;
+					//k--;
+				}
+				
+			}
+		}
+		return;
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			a=new int [n+1][5];
+			visited = new boolean[n+1][5];
+			for ( int i=0; i<n; i++){
+				for ( int j=0;j<5; j++){
+					a[i][j] = sc.nextInt();
+					visited[i][j] = false;
+				}
+			}
+			startX = n-1 ;
+			startY = 2;
+			ans = -1;
+			bfs();
+			System.out.println("#" + t + " " + ans);
+			
+		}
+	}
+}
+
