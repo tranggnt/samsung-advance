@@ -84,3 +84,125 @@ Output
 -1
 
 1
+package review;
+
+import java.util.Scanner;
+
+public class CrazyKing {
+	
+	static int [][] ma = {
+		{2, 1},
+		{2, -1},
+		{-2, 1},
+		{1, 2},
+		{1, -2},
+		{-1, 2},
+		{-1, -2},
+		{-2, -1}
+	};
+	
+	static public int[][] d = {
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1},
+		{-1, -1},
+		{-1, 1},
+		{1, -1},
+		{1, 1}
+	};
+	
+	public static class Point{
+		int x;
+		int y;
+		int step;
+		
+		public Point(int x, int y, int step){
+			this.x = x;
+			this.y = y;
+			this.step = step;
+		}
+	}
+	
+	static int n, m;
+	static char[][] a;
+	static int sx, sy, ex, ey;
+	static boolean[][] visited;
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			
+			m = sc.nextInt();
+			n = sc.nextInt();
+			
+			a = new char[n+5][m+5];
+			
+			visited = new boolean[n+5][m+5];
+			
+			sc.nextLine();
+			for ( int i=0; i<n; i++){
+				String s = sc.nextLine();
+				for ( int j=0; j<s.length(); j++){
+					a[i][j] = s.charAt(j);
+					 if (a[i][j] == 'A'){
+						sx = i;
+						sy = j;
+					}else if ( a[i][j] == 'B'){
+						ex = i;
+						ey = j;
+					}
+				}
+				
+				
+			}
+			
+			for ( int i=0; i<n; i++){
+					for ( int j =0; j<m; j++ ){
+						if ( a[i][j] == 'Z' ){
+							visited[i][j] = true;
+							for ( int[] c : ma){
+								int nx = i + c[0];
+								int ny = j + c[1];
+								
+								if ( nx >=0 && ny >=0 && nx <n && ny <m && a[nx][ny] != 'B' && !visited[nx][ny] ){
+									visited[nx][ny] = true;
+								}
+							}
+						}
+					}
+				}
+			int ans = -1;
+			Point[] q = new Point[n*m+5];
+			int front =0;
+			int rear = 0;
+			q[rear] = new Point(sx, sy, 0);
+			rear++;
+			visited[sx][sy] = true;
+			while ( front < rear){
+				Point cur = q[front];
+				front ++;
+				if (cur.x == ex && cur.y == ey) {
+					ans= cur.step;
+					break;
+				}
+				
+				for ( int c[] : d){
+					
+					int nx = cur.x+c[0];
+					int ny = cur.y+c[1];
+					
+					if ( nx >=0 && ny>=0 && nx<n && ny<m && a[nx][ny] != 'Z' && !visited[nx][ny]){
+						q[rear] = new Point(nx, ny, cur.step+1);
+						rear++;
+						visited[nx][ny] = true;
+					}
+				}
+			}
+			System.out.println(ans);
+		}
+	}
+
+}
