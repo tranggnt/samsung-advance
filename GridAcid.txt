@@ -360,3 +360,142 @@ public class GridAcid {
 		}
 	}
 
+
+package review;
+
+import java.io.FileInputStream;
+import java.util.Scanner;
+
+public class GridAcid {
+	
+	static int n, m, ans1, ans2;
+	static int sx, sy, ex, ey;
+	static boolean[][] visited;
+	static int[][] a;
+	static int[][] d = {
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1}
+	};
+	
+	
+	public static class Point{
+		int x; int y;
+		int t;
+		
+		Point(int x, int y, int t){
+			this.x = x; 
+			this.y = y;
+			this.t = t;
+		}
+	}
+	
+	
+	
+	public static void main(String[] agrs) throws Exception {
+		
+		Scanner sc = new Scanner(System.in);
+		int tc =sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			sx = sc.nextInt();
+			sy = sc.nextInt();
+			a = new int [n+5][m+5];
+			visited = new boolean[n+5][m+5];
+			int cnt = 0;
+			ans1= -1;
+			ans2 = -1;
+			for ( int i =1; i<=n ;i++){
+				for ( int j=1; j<=m; j++){
+					a[i][j] = sc.nextInt();
+					if ( a[i][j] == 2){
+						ex = i;
+						ey = j;
+					}else if ( a[i][j] == 1){
+						cnt++;
+					}
+				}
+			}
+			
+//				Point[] q = new Point[10000000];
+				int[] qr = new int[n*m];
+				int[] qc = new int[n*m];
+				int[] qt = new int[n*m];
+					
+				int front = 0;
+				int rear = 0;
+				
+//				q[rear] = new Point(sx, sy, 1);
+				qr[rear] = sx;
+				qc[rear] = sy;
+				qt[rear] = 1;
+				
+				rear++;
+				visited[sx][sy] = true;
+				int dem = 1;
+				int check = 0;
+				while ( front < rear){
+//					Point cur = q[front];
+					int curX = qr[front];
+					int curY = qc[front];
+					int curT = qt[front];
+//					
+					front ++;
+//					ans2 = cur.t;
+					ans2 = curT;
+					for ( int c[] : d){
+//						int nx = cur.x + c[0];
+//						int ny = cur.y + c[1];
+						int nx = curX + c[0];
+						int ny = curY + c[1];
+						
+						if ( nx == ex && ny == ey && !visited[ex][ey]){
+							check++;					
+							if ( check == 4){
+								visited[ex][ey] = true;
+//								ans1 = cur.t;
+								ans1 = curT;
+							}
+						}
+						
+						if ( nx >=1 && ny >=1 && nx <=n && ny <=m && !visited[nx][ny] && a[nx][ny] == 1 ){
+							
+//							q[rear] = new Point(nx, ny, cur.t + 1);
+							qr[rear] = nx;
+							qc[rear] = ny;
+							qt[rear] = curT + 1;
+//							
+							rear++;
+							dem++;
+//							if ( a[nx][ny] != 2){
+//								visited[nx][ny] = true;
+//							}
+							visited[nx][ny] = true;
+							
+						}
+					}
+				}
+				
+				
+				if ( ans1 == -1){
+					ans2 = -1;
+					System.out.println("Case #" + t);
+					System.out.println(ans1 + " " + ans2);
+				} else {
+					System.out.println("Case #" + t);
+					if ( dem != cnt){
+						System.out.println(ans1 + " " + "-1");
+					}else{
+						System.out.println(ans1 + " " + ans2);
+					}
+					
+				}
+				
+				
+			}
+			
+		}
+	}
+
