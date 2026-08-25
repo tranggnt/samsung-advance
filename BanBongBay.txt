@@ -1,0 +1,135 @@
+Bắn Bóng Bay
+Cho N quả bóng bay với mỗi quả bóng bay có 1 giá trị số.
+Người chơi được yêu cầu bắn vỡ các quả bóng bay để có được số điểm lớn nhất.
+
+Điểm của người chơi sẽ được tính bằng tổng các lần bắn bóng bay.
+Điểm của mỗi lần bắn bóng bay sẽ bằng tích của 2 quả bóng bay bên cạnh.
+
+Nếu bên cạnh chỉ có 1 quả bóng bay thì điểm sẽ bằng điểm của quả bóng bay này.
+
+Nếu không còn quả bóng bay nào bên cạnh thì điểm sẽ bằng điểm của quả bóng bay vừa bị bắn.
+
+
+
+Hãy tìm điểm số lớn nhất và in ra.
+N <=10
+
+Điểm của các quả bóng <10000
+
+Định dạng in ra như bên dưới.
+
+input:
+
+5
+6
+24 41 22 97 39 41
+5
+84 39 33 59 81
+6
+99 84 56 68 76 99
+8
+89 32 42 44 83 38 24 67
+8
+27 92 81 90 74 88 53 90
+
+Ouput:
+Case #1
+11348
+Case #2
+14700
+Case #3
+30759
+Case #4
+29289
+Case #5
+43110
+
+#include <iostream>
+using namespace std;
+long long a[105];
+long long visited[105];
+long long n;
+long long ans;
+
+struct point{ int x,y; };
+point q[9000005];
+int front_, rear_;
+void push(int x,int y){ rear_++; q[rear_].x=x; q[rear_].y=y; }
+point pop(){ return q[front_++]; }
+bool empty_(){ return front_ > rear_; }
+int check = 0;
+
+void quaylui(long long i, long long total,long long cnt)
+{
+	if (i < n)
+	{
+		long long tmp = total;
+		long long m1 = 0,m2 = 0;
+		for (int j = 0; j < cnt; j++)
+		{
+			if (a[j] > m1)
+			{
+				m2 = m1;
+				m1 = a[j];
+			}
+			else if (a[j] > m2)
+			{
+				m2 = a[j];
+			}
+		}
+		if (tmp + (m1 * m2 * cnt-2) + m1 * 2 < ans) return;
+	}
+	if (i == n)
+	{
+		if (total > ans) ans = total;
+		return;
+	}
+	for (int j = 0; j < cnt; j++)
+	{
+		long long tmp = total;
+		if (j == 0 && cnt - 1 != 0) tmp += a[1];
+		else if (j == cnt -1 && cnt - 1 != 0) tmp+= a[cnt-2];
+		else if (cnt - 1 == 0)
+		{
+			tmp += a[j];
+		}
+		else
+		{
+			tmp = tmp + (a[j-1] * a[j+1]);
+		}
+		int spare = a[j];
+		for (int z = j; z < cnt - 1; z++)
+		{
+			a[z] = a[z+1];
+		}
+		quaylui(i+1,tmp,cnt-1);
+		for (int z = cnt-1; z > j; z--)
+		{
+			a[z] = a[z-1];
+		}
+		a[j] = spare;
+	}
+	return;
+}
+
+int main()
+{
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	//freopen("Text.txt","r",stdin);
+	int t;
+	cin>>t;
+	for (int test=1; test<=t; test++)
+	{
+		ans = 0;
+		cin>>n;
+		for (int i = 0; i < n; i++)
+		{
+			visited[i] = 0;
+			cin>>a[i];
+		}
+		quaylui(0,0,n);
+		cout<<"Case #"<<test<<endl<<ans<<endl;
+	}
+	return 0;
+}
