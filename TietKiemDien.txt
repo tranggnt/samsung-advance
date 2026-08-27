@@ -113,6 +113,63 @@ Sau khi tác động vào khóa 1
 1
 
 0
+package review;
+
+import java.util.Scanner;
+
+public class TietKiemDien {
+	
+	static int n, k, ans;
+	static int [] a;
+	
+	static void change(int k){
+		int i = k;
+		while ( i <= n){
+			a[i] = 1-a[i];
+			i += k+1;
+		}
+	}
+	
+	static int count(){
+		int cnt = 0;
+		for ( int i=1; i<=n; i++){
+			if ( a[i] == 0) cnt++;
+		}
+		return cnt;
+	}
+	
+	static void Try(int step){
+		int off = count();
+		if ( off > ans) ans = off;
+		
+		if ( step == 3) return;
+		
+		for ( int i=1; i<=k ; i++){
+			change(i);
+			Try(step+1);
+			change(i);
+		}
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			n = sc.nextInt();
+			k = sc.nextInt();
+			a = new int[n+5];
+			for ( int i=1; i<=n; i++){
+				a[i] = sc.nextInt();
+			}
+			
+			ans = 0;
+			Try(0);
+			System.out.println("#" + t + " " + ans);
+		}
+	}
+
+}
+
 
 0
 
