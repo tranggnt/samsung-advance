@@ -109,3 +109,86 @@ Output
 #4 16
 
 #5 20
+
+
+package review;
+
+import java.util.Scanner;
+
+public class Dominos {
+	static int[][] a ;
+	static boolean[][] visited ;
+	static boolean[][] used;
+	static int ans;
+	
+	static int[][]d = {
+		{0, 1},
+		{0, -1},
+		{-1, 0},
+		{0, -1}
+	};
+	
+	static void Try(int x, int y, int remain){
+		if ( remain == 1){
+			ans++;
+			return;
+		}
+		
+		for ( int c[] : d){
+			int nx = x + c[0];
+			int ny = y + c[1];
+			
+			
+			if ( nx >=0 && ny >=0 && nx < 7 && ny <8){
+				if ( !visited[nx][ny]){
+					int a1 = a[x][y];
+					int a2 = a[nx][ny];
+					if ( !used[a1][a2]){
+						visited[nx][ny] = true;
+						used[a1][a2] = true;
+						used[a2][a1] = true;
+					}
+					boolean check =false;
+					for ( int i =0; i<7; i++){
+						for ( int j =0; j<8; i++){
+							if ( !visited[i][j]){
+								visited[i][j] = true;
+								check = true;
+								Try(i, j, remain-1);
+								break;
+							}
+						}
+					}
+					visited[x][y] = false;
+					used[a1][a2] = used[a2][a1] = false;
+				}
+				
+				
+			}
+			
+			
+			
+		}
+		
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			a = new int [10][10];
+			for ( int i =0; i<7; i++){
+				for ( int j = 0; j<8; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			visited = new boolean[10][10];
+			used = new boolean[10][10];
+			ans = 0;
+			Try(0, 0, 28);
+			System.out.println("#" + t + " " + ans);
+		}
+	}
+
+}
+
