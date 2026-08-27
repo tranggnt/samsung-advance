@@ -131,7 +131,7 @@ public class HugoBanDau {
 					
 					for ( int j=0; j<huong; j++){
 						int x2 = x1 + dx[type2][j]; 
-						int y2 = y1 + dx[type2][j];
+						int y2 = y1 + dy[type2][j];
 						if ( x2 < 0 || y2 <0 || x2 >=n || y2 >=m) continue;
 						if ( x2 == cur.x && y2 == cur.y ){
 							check = 1;
