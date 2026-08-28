@@ -135,3 +135,79 @@ Giải thích
 5+6+9
 
 5+7+8
+
+import java.util.Scanner;
+
+public class SumItUp {
+    static int t, n;
+    static int[] a = new int[15];
+    static int count;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+
+        int tc = sc.nextInt();
+        for (int test = 1; test <= tc; test++) {
+            t = sc.nextInt();
+            n = sc.nextInt();
+
+            for (int i = 0; i < n; i++) {
+                a[i] = sc.nextInt();
+            }
+
+            // 1. Sắp xếp mảng giảm dần
+            sortDescending();
+
+            count = 0;
+
+            // 2. Gọi hàm quay lui bắt đầu từ vị trí 0, tổng hiện tại = 0
+            backtrack(0, 0);
+
+            // 3. In kết quả
+            if (count == 0) {
+                System.out.println("#" + test + " -1");
+            } else {
+                System.out.println("#" + test + " " + count);
+            }
+        }
+        sc.close();
+    }
+
+    static void backtrack(int index, int currentSum) {
+        // Tìm thấy 1 tổng hợp lệ
+        if (currentSum == t) {
+            count++;
+            return;
+        }
+
+        // Vượt quá tổng T hoặc hết phần tử
+        if (currentSum > t || index >= n) {
+            return;
+        }
+
+        for (int i = index; i < n; i++) {
+            // Bỏ qua phần tử trùng lặp trong CÙNG MỘT MỨC ĐỆ QUY
+            if (i > index && a[i] == a[i - 1]) {
+                continue;
+            }
+
+            // Thử chọn a[i] và đi tiếp sang index i + 1
+            backtrack(i + 1, currentSum + a[i]);
+        }
+    }
+
+    // Tự viết hàm sắp xếp giảm dần
+    static void sortDescending() {
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (a[i] < a[j]) {
+                    int temp = a[i];
+                    a[i] = a[j];
+                    a[j] = temp;
+                }
+            }
+        }
+    }
+}
+
