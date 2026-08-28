@@ -1,13 +1,8 @@
 Given a specified total t and a list of n integers, find all distinct sums using numbers from the list that add up to t. For example, if t = 4, n = 6, and the list is [4, 3, 2, 2, 1, 1], then there are four different sums that equal 4: 4, 3+1, 2+2, and 2+1+1. (A number can be used within a sum as many times as it appears in the list, and a single number counts as a sum.) Your job is to solve this problem in general.
 
- 
-
 Input
 
 The input file will contain one or more test cases, one per line. Each test case contains t, the total, followed by n, the number of integers in the list, followed by n integers x1, . . . ,xn. t will be a positive integer less than 1000, n will be an integer between 1 and 12 (inclusive), and x1, . . . , xn will be positive integers less than 100. All numbers will be separated by exactly one space. The numbers in each list may be repetitions.
-
- 
-
 Output
 
 For each test case, output the total way, if not output -1.
@@ -136,78 +131,70 @@ Giải thích
 
 5+7+8
 
+package review;
+
 import java.util.Scanner;
 
 public class SumItUp {
-    static int t, n;
-    static int[] a = new int[15];
-    static int count;
+	
+	static int n, cnt, k;
+	static int[] a;
+	
+	static void sort(){
+		for ( int i= 0; i< n-1; i++){
+			for ( int j=i+1; j<n; j++){
+				if ( a[i] < a[j]){
+					int tmp = a[i];
+					a[i] = a[j];
+					a[j] = tmp;
+				}
+			}
+		}
+	}
+	
+	static void Try(int index, int curSum){
+		
+		if ( curSum == k){
+			cnt ++;
+			return;
+		}
+		
+		if ( curSum > k || index >= n){
+			return;
+		}
+		
+		for ( int i = index; i<n; i++){
+			if ( i > index && a[i] == a[i-1]){
+				continue;
+			}
+			
+			Try(i+1, curSum+a[i]);
+		}
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			k = sc.nextInt();
+			n = sc.nextInt();
+			a = new int[n];
+			for ( int i = 0; i<n; i++){
+				a[i] = sc.nextInt();
+			}
+			
+			sort();
+			cnt = 0;
+			Try(0, 0);
+			
+			if ( cnt == 0){
+				System.out.println("#" + t + " " + "-1");
+			}else{
+				System.out.println("#" + t + " " + cnt);
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        if (!sc.hasNextInt()) return;
+			}
+		}
+	}
 
-        int tc = sc.nextInt();
-        for (int test = 1; test <= tc; test++) {
-            t = sc.nextInt();
-            n = sc.nextInt();
-
-            for (int i = 0; i < n; i++) {
-                a[i] = sc.nextInt();
-            }
-
-            // 1. Sắp xếp mảng giảm dần
-            sortDescending();
-
-            count = 0;
-
-            // 2. Gọi hàm quay lui bắt đầu từ vị trí 0, tổng hiện tại = 0
-            backtrack(0, 0);
-
-            // 3. In kết quả
-            if (count == 0) {
-                System.out.println("#" + test + " -1");
-            } else {
-                System.out.println("#" + test + " " + count);
-            }
-        }
-        sc.close();
-    }
-
-    static void backtrack(int index, int currentSum) {
-        // Tìm thấy 1 tổng hợp lệ
-        if (currentSum == t) {
-            count++;
-            return;
-        }
-
-        // Vượt quá tổng T hoặc hết phần tử
-        if (currentSum > t || index >= n) {
-            return;
-        }
-
-        for (int i = index; i < n; i++) {
-            // Bỏ qua phần tử trùng lặp trong CÙNG MỘT MỨC ĐỆ QUY
-            if (i > index && a[i] == a[i - 1]) {
-                continue;
-            }
-
-            // Thử chọn a[i] và đi tiếp sang index i + 1
-            backtrack(i + 1, currentSum + a[i]);
-        }
-    }
-
-    // Tự viết hàm sắp xếp giảm dần
-    static void sortDescending() {
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (a[i] < a[j]) {
-                    int temp = a[i];
-                    a[i] = a[j];
-                    a[j] = temp;
-                }
-            }
-        }
-    }
 }
 
