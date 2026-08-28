@@ -192,3 +192,128 @@ public class Dominos {
 
 }
 
+package review;
+
+import java.util.Scanner;
+
+public class Dominos {
+
+    static int[][] a;
+    static boolean[][] visited;
+    static boolean[][] used;
+
+    static int ans;
+
+    static int[][] d = {
+        {0, 1},   // phải
+        {0, -1},  // trái
+        {-1, 0},  // lên
+        {1, 0}    // xuống
+    };
+
+    static void Try() {
+
+        // Tìm ô chưa được ghép đầu tiên
+        int x = -1;
+        int y = -1;
+
+        for (int i = 0; i < 7; i++) {
+
+            for (int j = 0; j < 8; j++) {
+
+                if (!visited[i][j]) {
+
+                    x = i;
+                    y = j;
+
+                    break;
+                }
+            }
+
+            if (x != -1) {
+                break;
+            }
+        }
+
+        // Không còn ô nào
+        if (x == -1) {
+            ans++;
+            return;
+        }
+
+        // Thử ghép ô (x,y) với 4 ô xung quanh
+        for (int i = 0; i < 4; i++) {
+
+            int nx = x + d[i][0];
+            int ny = y + d[i][1];
+
+            // Ra ngoài bàn
+            if (nx < 0 || nx >= 7 ||
+                ny < 0 || ny >= 8) {
+
+                continue;
+            }
+
+            // Ô bên cạnh đã được ghép
+            if (visited[nx][ny]) {
+                continue;
+            }
+
+            int a1 = a[x][y];
+            int a2 = a[nx][ny];
+
+            // Domino này đã được sử dụng
+            if (used[a1][a2]) {
+                continue;
+            }
+
+            // Đặt domino
+            visited[x][y] = true;
+            visited[nx][ny] = true;
+
+            used[a1][a2] = true;
+            used[a2][a1] = true;
+
+            // Đi tiếp
+            Try();
+
+            // Backtrack
+            visited[x][y] = false;
+            visited[nx][ny] = false;
+
+            used[a1][a2] = false;
+            used[a2][a1] = false;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int tc = sc.nextInt();
+
+        for (int t = 1; t <= tc; t++) {
+
+            a = new int[7][8];
+            visited = new boolean[7][8];
+            used = new boolean[7][7];
+
+            for (int i = 0; i < 7; i++) {
+
+                for (int j = 0; j < 8; j++) {
+
+                    a[i][j] = sc.nextInt();
+                }
+            }
+
+            ans = 0;
+
+            Try();
+
+            System.out.println("#" + t + " " + ans);
+        }
+
+        sc.close();
+    }
+}
+
