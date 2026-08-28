@@ -79,89 +79,94 @@ Case #5
 
 13104400
 
+package review;
+
 import java.util.Scanner;
 
-public class Main {
-    static int N, M;
-    static long maxHoney;
-    static int[][] grid;
-    static boolean[][] visited;
+public class HugoVaOng {
+	
+	static int n, m;
+	static int[][] a;
+	static boolean[][] visited;
+	static long ans;
 
-    // Hướng di chuyển cho hàng chẵn (index 0-based: 0, 2, 4...)
-    static int[][] dirEven = {
-        {0, -1}, {0, 1},     // Trái, Phải
-        {-1, -1}, {-1, 0},   // Trên-Trái, Trên-Phải
-        {1, -1}, {1, 0}      // Dưới-Trái, Dưới-Phải
+	
+	static int[][] dirEven = {
+        {1, 0}, {-1, 0},     
+        {-1, -1}, {-1, 1},   
+        {0, -1}, {0, 1}      
     };
 
-    // Hướng di chuyển cho hàng lẻ (index 0-based: 1, 3, 5...)
+    
     static int[][] dirOdd = {
-        {0, -1}, {0, 1},     // Trái, Phải
-        {-1, 0}, {-1, 1},    // Trên-Trái, Trên-Phải
-        {1, 0}, {1, 1}       // Dưới-Trái, Dưới-Phải
+        {0, -1}, {0, 1},     
+        {-1, 0}, {1, -1},    
+        {1, 0}, {1, 1}       
     };
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        if (!sc.hasNextInt()) return;
-
-        int T = sc.nextInt();
-        for (int tc = 1; tc <= T; tc++) {
-            M = sc.nextInt(); // Số cột
-            N = sc.nextInt(); // Số hàng
-
-            grid = new int[N][M];
-            visited = new boolean[N][M];
-
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    grid[i][j] = sc.nextInt();
-                }
-            }
-
-            maxHoney = 0;
-
-            // Thử bắt đầu từ mọi ô trong ma trận
-            for (int r = 0; r < N; r++) {
-                for (int c = 0; c < M; c++) {
-                    visited[r][c] = true;
-                    dfs(r, c, 1, grid[r][c]);
-                    visited[r][c] = false;
-                }
-            }
-
-            // Kết quả là Bình phương tổng lượng mật lớn nhất
-            long result = maxHoney * maxHoney;
-            System.out.println("Case #" + tc);
-            System.out.println(result);
-        }
-        sc.close();
+	
+    static public void dfs(int r, int c, int cnt, long sum){
+    	if ( cnt == 4){
+    		if ( sum > ans){
+    			ans = sum;    			
+    		}
+    		return;
+    	}
+    	
+    	if ( c % 2 == 0){
+    		for ( int d[]  : dirEven){
+    			int nx = r + d[0];
+    			int ny = c + d[1];
+    			
+    			if ( nx >=0 && ny >=0 && nx <n && ny <m && !visited[nx][ny]){
+    				visited[nx][ny] = true;
+    				dfs(nx, ny, cnt+1, sum+a[nx][ny]);
+    				visited[nx][ny] = false;
+    			}
+    		}
+    	}else{
+    		for ( int d[]  : dirOdd){
+    			int nx = r + d[0];
+    			int ny = c + d[1];
+    			
+    			if ( nx >=0 && ny >=0 && nx <n && ny <m && !visited[nx][ny]){
+    				visited[nx][ny] = true;
+    				dfs(nx, ny, cnt+1, sum+a[nx][ny]);
+    				visited[nx][ny] = false;
+    			}
+    		}
+    	}
     }
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			m = sc.nextInt();
+			n= sc.nextInt();
+			a = new int[n+5][m+5];
+			visited = new boolean[n+5][m+5];
+			for ( int i=0; i<n; i++){
+				for ( int j=0;j <m; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			
+			ans = 0;
+			for ( int i=0; i<n; i++){
+				for ( int j=0;j <m; j++){
+					visited[i][j] = true;
+					dfs(i,j, 1, a[i][j]);
+					visited[i][j] = false;
+				}
+			}
+			
+			
+			long res = ans * ans;
+			System.out.println("Case #" + t);
+			System.out.println(res);
+			
+		}
+	}
 
-    static void dfs(int r, int c, int count, long currentSum) {
-        // Khi chọn đủ 4 ô liên kết
-        if (count == 4) {
-            if (currentSum > maxHoney) {
-                maxHoney = currentSum;
-            }
-            return;
-        }
-
-        // Chọn tập các hướng di chuyển tùy theo hàng chẵn hay lẻ
-        int[][] dirs = (r % 2 == 0) ? dirEven : dirOdd;
-
-        for (int[] dir : dirs) {
-            int nr = r + dir[0];
-            int nc = c + dir[1];
-
-            // Kiểm tra ô hợp lệ trong ma trận và chưa được thăm
-            if (nr >= 0 && nr < N && nc >= 0 && nc < M && !visited[nr][nc]) {
-                visited[nr][nc] = true;
-                dfs(nr, nc, count + 1, currentSum + grid[nr][nc]);
-                visited[nr][nc] = false; // Backtrack
-            }
-        }
-    }
 }
-
 
