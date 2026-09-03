@@ -1,0 +1,135 @@
+The newly developed mobile processor Maxinos from Samsung has N x N number of cells.
+
+
+
+ 
+
+
+In 1 cell there can be 1 core or 1 electric wire.
+
+
+
+ 
+
+
+Electric power runs on the edge of Maxinos.
+
+
+
+
+ 
+
+ 
+
+The wire that connects the core and the power can only be installed in a straight line.
+
+
+
+ 
+
+
+Wires cannot intersect with each other.
+
+
+
+
+The initial Maxinos’ condition before the wires are connected is given as below.
+
+ 
+
+(The Cores on the margin of Maxinos are considered to be already connected to the power.)
+
+
+
+
+
+
+
+ 
+
+ 
+
+
+
+ 
+
+ 
+
+▶ When the maximum number of Cores is connected to the power, find the sum length of the wire.
+
+ 
+
+   However, if there are many different options find the minimum value of the sum of the length of the wire.
+
+ 
+
+ 
+
+
+The answer for the exercise above is 12.
+
+ 
+
+ 
+
+ 
+
+[Restrictions]
+
+
+
+
+1. 7 ≤ N ≤ 12
+
+
+
+
+2. The number of Core is more or equal than 1 and less than or equal to 12(1 ≤  N ≤ 12).
+
+
+
+
+3. There may be Cores that does not get connected to the power, even though one may try to connect it to the power as much as possible.
+
+ 
+
+ 
+
+[Input]
+
+
+
+
+The first line contains T, the number of test cases.
+
+
+
+
+The test cases are given starting on the next line.
+
+
+
+
+The first line of each test case has N, and in the next N number of lines the Maxinos’ initial condition, given in N x N array.
+
+
+
+
+0 denotes an empty cell, and 1 denotes the Core, and there are no other numbers given.
+
+ 
+
+ 
+
+
+[Output]
+
+
+
+
+Print ‘#tc’ for each test case, and leave a blank space and print the answer.
+
+
+
+
+(tc refers to a test case number and it starts with 1)
