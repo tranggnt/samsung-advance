@@ -543,3 +543,180 @@ public class NuocBien {
     }
 }
 
+
+
+
+package review;
+
+import java.util.Scanner;
+
+public class NuocBien {
+	
+	static int[][] d = {
+		{0, 1},
+		{0, -1},
+		{1, 0},
+		{-1, 0}
+	};
+	
+	public static class Point{
+		int x; int y;
+		Point ( int x, int y){
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
+	static int n, m, ans, maxHeight;
+	static int[][] a;
+	
+	static void findSea(int height, boolean[][] sea){
+		Point[] q = new Point[n*m];
+		
+		int front = 0;
+		int rear = 0;
+		
+		for ( int i=0; i<n; i++){
+			if ( a[i][0] <= height && !sea[i][0]){
+				sea[i][0] = true;
+				q[rear ++] = new Point(i, 0);
+			}
+			if (a[i][m-1] <= height && !sea[i][m-1]){
+				sea[i][m-1] = true;
+				q[rear++] = new Point(i, m-1);
+			}
+		}
+		
+		
+		for ( int j = 0; j<m; j++){
+			if ( a[0][j] <= height && !sea[0][j]){
+				sea[0][j] = true;
+				q[rear++] = new Point(0, j);
+			}
+			
+			if ( a[n-1][j] <= height && !sea[n-1][j]){
+				sea[n-1][j] = true;
+				q[rear++] = new Point(n-1, j);
+			}
+		}
+		
+		while ( front < rear){
+			Point cur = q[front++];
+			for ( int c[] : d){
+				int nx = cur.x + c[0];
+				int ny = cur.y + c[1];
+				
+				if ( nx < 0 || ny <0 || nx >n-1 || ny > m-1 || sea[nx][ny]){
+					continue;
+				}
+				
+				if ( a[nx][ny] > height) continue;
+				
+				sea[nx][ny] = true;
+				
+				q[rear++] = new Point(nx, ny);
+			}
+		}
+	}
+	
+	
+	static void bfs(int x, int y, boolean[][] sea, boolean[][] visited){
+		Point[] q = new Point[n*m];
+		int front = 0;
+		int rear = 0;
+		
+		q[rear++] = new Point(x,y);
+		visited[x][y] = true;
+		
+		while ( front < rear){
+			Point cur = q[front++];
+			
+			for ( int c[] : d){
+				int nx = cur.x + c[0];
+				int ny = cur.y + c[1];
+				
+				if ( nx <0 || ny <0 || nx >=n || ny >=m){
+					continue;
+				}
+				
+				if ( visited[nx][ny] || sea[nx][ny]) continue;
+				
+				visited[nx][ny] = true;
+				q[rear++] = new Point(nx, ny);
+			}
+		}
+	}
+	
+	
+	static boolean isSplit( int height){
+		boolean[][] sea = new boolean[n+5][m+5];
+		boolean[][] visited = new boolean[n+5][m+5];
+		
+		findSea(height, sea);
+		
+		int cnt = 0;
+		
+		for ( int i=0; i<n; i++){
+			for ( int j=0; j<m; j++){
+				if ( !sea[i][j] && !visited[i][j]){
+					cnt++;
+					if ( cnt >1) return true;
+					bfs(i, j, sea, visited);
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int t = 1;
+		while ( true){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			
+			if ( n == 0 & m==0) break;
+			ans = -1;
+			a = new int[n+5][m+5];
+			maxHeight = 0;
+			
+			for ( int i =0; i<n; i++){
+				for ( int j =0; j<m; j++){
+					a[i][j] = sc.nextInt();
+					maxHeight = Math.max(maxHeight, a[i][j]);
+				}
+			}
+			
+			for ( int i=1; i<=maxHeight; i++){
+				if ( isSplit(i)){
+					ans = i;
+					break;
+				}
+			}
+			
+			 if (ans == -1) {
+
+	                System.out.println(
+	                    "Case " + t +
+	                    ": Island never splits."
+	                );
+
+	            } else {
+
+	                System.out.println(
+	                    "Case " + t +
+	                    ": Island splits when ocean rises " +
+	                    ans + " feet."
+	                );
+	            }
+			 
+			 t++;
+			
+			
+		}
+	}
+
+}
+
+
