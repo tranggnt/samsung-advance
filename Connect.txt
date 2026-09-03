@@ -123,6 +123,138 @@ The first line of each test case has N, and in the next N number of lines the Ma
 
 
 [Output]
+package review;
+
+import java.util.Scanner;
+
+public class ConnectProcessors {
+
+	static int n, ans, maxcnt;
+	static int[][] a;
+	static boolean[][] visited;
+	
+	static void Try( int total, int cnt){
+		
+		int find = 0;
+		
+		for ( int i =0; i<n; i++){
+			for ( int j = 0; j<n; j++){
+				if ( a[i][j] == 1 && !visited[i][j] ){
+					if ( i==0 || j ==0 || i == n-1 || j == n-1){
+						visited[i][j] = true;
+						continue;
+					}
+					find = 1;
+					visited[i][j] = true;
+					
+					int d1 = i +1;
+					int d2 = i-1;
+					int d3 = j+1;
+					int d4 = j-1;
+					
+					while ( d1 < n && !visited[d1][j] && a[d1][j]==0){
+						d1 ++;
+					}
+					
+					while ( d2 >=0 && !visited[d2][j] && a[d2][j] == 0){
+						d2--;
+					}
+					
+					while ( d3 < n && !visited[i][d3] && a[i][d3] == 0){
+						d3++;
+					}
+					
+					while ( d4>=0 && !visited[i][d4] && a[i][d4] == 0){
+						d4--;
+					}
+					
+					Try(total, cnt);
+					
+					if ( d1 == n){
+						for ( int k = i+1; k<d1; k++){
+							visited[k][j] = true;
+						}
+						Try(total + (d1-i-1), cnt + 1 );
+						for ( int k = i+1; k<d1; k++){
+							visited[k][j] = false;
+						}
+						
+					}
+					
+					if ( d2 == -1){
+						for ( int k = i-1; k>d2; k-- ){
+							visited[k][j] = true;
+						}
+						Try(total + i, cnt +1);
+						for ( int k = i-1; k>d2; k-- ){
+							visited[k][j] = false;
+						}
+					}
+					
+					if ( d3 ==n){
+						for ( int k = j+1; k<d3; k++){
+							visited[i][k] = true;
+						}
+						Try(total + (d3-j-1), cnt + 1);
+						for ( int k = j+1; k<d3; k++){
+							visited[i][k] = false;
+						}
+					}
+					
+					if ( d4 == -1){
+						for ( int k = j-1; k>d4; k--){
+							visited[i][k] = true;
+						}
+						
+						Try(total + j, cnt+1);
+						for ( int k = j-1; k>d4; k--){
+							visited[i][k] = false;
+						}
+					}
+					
+					visited[i][j] = false;
+					break;
+				} 
+			}
+			
+			if ( find == 1) break;
+		}
+		
+		if (find ==0){
+			if ( cnt > maxcnt){
+				maxcnt = cnt;
+				ans = total;
+				return;
+				
+			}
+			if ( cnt == maxcnt && total < ans){
+				ans =total;
+				return;
+			}
+		}
+		
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			a = new int[n+5][n+5];
+			visited = new boolean[n+5][n+5];
+			for ( int i =0; i<n; i++){
+				for ( int j = 0; j<n; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			ans = Integer.MAX_VALUE;
+			maxcnt = 0;
+			Try(0,0);
+			System.out.println("#" + t + " " + ans);
+			
+		}
+	}
+}
 
 
 
