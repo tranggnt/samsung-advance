@@ -22,59 +22,36 @@ Mỗi test case in ra “# ” theo sau là số lượng kết quả tìm đư�
 
 #1 6
 
+package review;
+
 import java.util.Scanner;
 
-public class ZeroSum {
-    static int n;
-    static int count;
+public class Zero {
+	
+	static int n, count;
+	
+	static void Try( int next, long current, int sign, long sum){
+		if ( next > n){
+			if ( sum + sign*current ==0) count++;
+			return;
+		}
+		
+		Try ( next+1, current*10 + next, sign, sum);
+		Try ( next+1, next, 1, sum + sign*current );
+		Try ( next+1, next, -1, sum + sign*current);
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			count = 0;
+			Try(2, 1, 1, 0);
+			System.out.println("#" + t + " " + count);
+		}
+	}
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        if (!sc.hasNextInt()) return;
-
-        int tc = sc.nextInt();
-        for (int t = 1; t <= tc; t++) {
-            n = sc.nextInt();
-            count = 0;
-
-            // Bắt đầu từ số 1:
-            // currentNum = 1, currentSum = 0, sign = 1 (dương)
-            // Đã xét đến số 1 (nextNum = 2)
-            backtrack(2, 1, 0, 1);
-
-            System.out.println("#" + t + " " + count);
-        }
-        sc.close();
-    }
-
-    /**
-     * @param nextNum    Số tiếp theo chuẩn bị xét (từ 2 đến N+1)
-     * @param currentNum Số hiện tại đang được tạo (có thể do ghép số)
-     * @param currentSum Tổng tích lũy trước đó
-     * @param sign       Dấu của currentNum (+1 hoặc -1)
-     */
-    static void backtrack(int nextNum, long currentNum, long currentSum, int sign) {
-        // Điều kiện dừng: Đã xét hết từ 1 đến N
-        if (nextNum > n) {
-            // Cộng nốt số cuối cùng vào tổng tích lũy
-            if (currentSum + (sign * currentNum) == 0) {
-                count++;
-            }
-            return;
-        }
-
-        // Trường hợp 1: Chèn khoảng trắng ' ' (Ghép số)
-        // Số mới = currentNum * 10 + nextNum (giữ nguyên sign và currentSum)
-        backtrack(nextNum + 1, currentNum * 10 + nextNum, currentSum, sign);
-
-        // Trường hợp 2: Chèn dấu cộng '+'
-        // Tính dốt currentNum vào currentSum, rồi khởi tạo số mới = nextNum với sign = +1
-        backtrack(nextNum + 1, nextNum, currentSum + (sign * currentNum), 1);
-
-        // Trường hợp 3: Chèn dấu trừ '-'
-        // Tính dốt currentNum vào currentSum, rồi khởi tạo số mới = nextNum với sign = -1
-        backtrack(nextNum + 1, nextNum, currentSum + (sign * currentNum), -1);
-    }
 }
 
  
