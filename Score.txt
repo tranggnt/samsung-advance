@@ -1,0 +1,52 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package samsung_advanced;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author Admin
+ */
+public class Score {
+    
+    static int s, k, n;
+    static int[][] a;
+    static int cnt;
+    
+    static void Try(int pos, int sum, int last){
+        if ( pos == k){
+            if ( sum == s) cnt++;
+            return;
+        }
+        
+        for ( int i = 0; i<n; i++ ){
+            int score = a[i][pos];
+            if ( score>=last && sum + score <= s){
+                Try(pos+1, sum+score, score);
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int tc = sc.nextInt();
+        for ( int t = 1; t<=tc; t++){
+            s = sc.nextInt();
+            k = sc.nextInt();
+            n = sc.nextInt();
+            a = new int[n+5][k+5];
+            for ( int i=0; i<n; i++){
+                for ( int j=0; j<k; j++){
+                    a[i][j] = sc.nextInt();
+                }
+            }
+            cnt = 0;
+            Try(0, 0, 0);
+            if ( cnt == 0) System.out.println(-1);
+            else System.out.println(cnt);
+        }
+    }
+}
