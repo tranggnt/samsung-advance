@@ -55,3 +55,150 @@ Output:
 Case 1: Island never splits.
 
 Case 2: Island splits when ocean rises 3 feet.
+import java.util.*;
+
+public class Island {
+
+    static int n, m;
+    static int[][] height;
+
+    // 4 hướng: lên, xuống, trái, phải
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int testCase = 1;
+
+        while (true) {
+
+            n = sc.nextInt();
+            m = sc.nextInt();
+
+            // 0 0: kết thúc
+            if (n == 0 && m == 0) {
+                break;
+            }
+
+            height = new int[n][m];
+
+            int maxHeight = 0;
+
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    height[i][j] = sc.nextInt();
+                    maxHeight = Math.max(maxHeight, height[i][j]);
+                }
+            }
+
+            int answer = -1;
+
+            // Thử từng mức nước biển dâng
+            for (int water = 1; water <= maxHeight; water++) {
+
+                if (isSplit(water)) {
+                    answer = water;
+                    break;
+                }
+            }
+
+            if (answer == -1) {
+                System.out.println(
+                    "Case " + testCase + ": Island never splits."
+                );
+            } else {
+                System.out.println(
+                    "Case " + testCase +
+                    ": Island splits when ocean raises " +
+                    answer + " feet."
+                );
+            }
+
+            testCase++;
+        }
+
+        sc.close();
+    }
+
+    /*
+     * Kiểm tra xem ở mức nước hiện tại,
+     * đảo có bị chia thành nhiều phần hay không.
+     */
+    static boolean isSplit(int water) {
+
+        boolean[][] visited = new boolean[n][m];
+
+        int islandCount = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+
+                // Ô này vẫn còn là đất
+                if (height[i][j] > water && !visited[i][j]) {
+
+                    islandCount++;
+
+                    // Đã có ít nhất 2 vùng đất
+                    if (islandCount >= 2) {
+                        return true;
+                    }
+
+                    bfs(i, j, water, visited);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * BFS tìm toàn bộ một vùng đất liên thông.
+     */
+    static void bfs(
+            int startX,
+            int startY,
+            int water,
+            boolean[][] visited) {
+
+        Queue<int[]> queue = new LinkedList<>();
+
+        queue.offer(new int[]{startX, startY});
+        visited[startX][startY] = true;
+
+        while (!queue.isEmpty()) {
+
+            int[] current = queue.poll();
+
+            int x = current[0];
+            int y = current[1];
+
+            // Xét 4 ô xung quanh
+            for (int d = 0; d < 4; d++) {
+
+                int nx = x + dx[d];
+                int ny = y + dy[d];
+
+                // Ra ngoài lưới
+                if (nx < 0 || nx >= n ||
+                    ny < 0 || ny >= m) {
+                    continue;
+                }
+
+                // Đã thăm
+                if (visited[nx][ny]) {
+                    continue;
+                }
+
+                // Ô có độ cao <= mực nước đã bị ngập
+                if (height[nx][ny] <= water) {
+                    continue;
+                }
+
+                visited[nx][ny] = true;
+                queue.offer(new int[]{nx, ny});
+            }
+        }
+    }
+}
