@@ -1,0 +1,196 @@
+TỔNG HỢP KIẾN THỨC
+BROWSER SEARCH / INFORMATION RETRIEVAL
+Từ IR Fundamentals → Keyword Search → Semantic Search → Evaluation
+I. Tổng quan: Information Retrieval
+Information Retrieval (IR) là bài toán tìm kiếm những thông tin phù hợp với nhu cầu của người dùng từ một tập dữ liệu lớn.
+Query → Retrieval → Candidates → Ranking → Top-K → Search Results → Evaluation
+II. Các khái niệm cơ bản
+Query: Nội dung người dùng nhập vào hệ thống tìm kiếm. Ví dụ: “How to repair a car?”
+Document: Một đơn vị thông tin có thể tìm kiếm, chẳng hạn trang web, bài viết hoặc PDF.
+Corpus: Toàn bộ tập documents mà hệ thống có thể tìm kiếm.
+Candidate: Document được lựa chọn làm ứng viên có khả năng liên quan đến Query.
+Relevance: Mức độ candidate đáp ứng search intent của người dùng.
+III. Retrieval và Ranking
+1. Retrieval
+Retrieval là bước tìm ra những document có khả năng liên quan và tạo thành tập candidates.
+Corpus → Retrieval → Candidates
+2. Ranking
+Ranking là bước sắp xếp candidates theo mức độ phù hợp.
+Candidates → Ranking → D3 (0.95), D1 (0.91), D5 (0.82), ...
+3. Top-K
+Top-K là K kết quả đứng đầu sau khi ranking. Ví dụ K = 3 thì lấy 3 kết quả có thứ hạng cao nhất.
+IV. Keyword Search / Lexical Search
+Keyword Search dựa vào lexical overlap: mức độ các từ/ngữ trong Query xuất hiện hoặc trùng với từ/ngữ trong Document.
+Query: “how to repair car”
+Document: “How to repair a car engine”
+→ lexical overlap cao
+V. TF, IDF và TF-IDF
+1. TF — Term Frequency
+TF thể hiện mức độ xuất hiện của một term trong một document. Term xuất hiện nhiều lần thường có TF cao hơn.
+2. IDF — Inverse Document Frequency
+IDF phản ánh mức độ hiếm/đặc trưng của term trong toàn corpus. Term phổ biến có IDF thấp; term hiếm có IDF cao.
+Term phổ biến → IDF thấp
+Term hiếm → IDF cao
+3. TF-IDF
+TF-IDF kết hợp hai yếu tố:
+TF-IDF = TF × IDF
+Một term có trọng số cao khi xuất hiện đáng kể trong document và không quá phổ biến trong toàn corpus.
+VI. Hạn chế của Keyword Search
+Keyword Search hoạt động tốt khi Query và Document dùng cùng từ, nhưng gặp khó khăn với synonym và paraphrase.
+Loại	Query	Document
+Synonym	fix car	repair automobile
+Paraphrase	make my laptop faster	improve computer performance
+VII. Text Embedding
+Text Embedding là quá trình biến text thành một dense vector biểu diễn các đặc trưng ngữ nghĩa.
+Text → Embedding Model → Vector
+“How to repair my car?” → [0.21, -0.43, 0.72, 0.15, ...]
+Embedding thường có số chiều cố định theo model, ví dụ 384 hoặc 768 dimensions. Không nên hiểu từng dimension riêng lẻ là một từ cụ thể; thông tin được biểu diễn phân tán trên toàn vector.
+VIII. Pretrained Embedding Model
+Pretrained embedding model là model đã được huấn luyện trước và có thể ánh xạ text thành vector.
+Text → Pretrained Embedding Model → Fixed-size Vector
+Query và document nên được encode bằng cùng một embedding model để chúng có thể được so sánh trong cùng vector space.
+Chất lượng embedding phụ thuộc đáng kể vào:
+•	Model
+•	Language
+•	Domain
+IX. Semantic Search
+Semantic Search dựa vào độ tương đồng về nghĩa thay vì chỉ dựa vào việc các từ có trùng nhau hay không.
+“How can I fix my car?”
+≈
+“Guide to repairing an automobile”
+Embedding giúp biểu diễn các câu có ý nghĩa gần nhau thành các vector có xu hướng gần nhau trong vector space.
+X. Cosine Similarity
+Cosine Similarity đo độ tương đồng về hướng giữa hai vector.
+cosine_similarity(q, d) = (q · d) / (||q|| ||d||)
+Similarity càng cao thì hai vector càng tương đồng về hướng. Similarity score có thể được dùng làm tín hiệu để xếp hạng candidates.
+XI. Precompute Candidate Embeddings
+Embedding của documents/candidates có thể được tính trước và lưu lại. Khi user search, hệ thống chỉ cần tính embedding cho Query rồi so sánh với các document embeddings đã có.
+OFFLINE:
+Documents → Embedding Model → Document Embeddings → Vector Index
+
+ONLINE:
+User Query → Embedding Model → Query Embedding → Similarity Search → Ranking → Top-K
+XII. Keyword Search vs Semantic Search
+Tiêu chí	Keyword Search	Semantic Search
+Cơ sở	Lexical overlap	Semantic similarity
+Phương pháp	TF-IDF, BM25	Embedding + similarity
+Exact terms	Rất tốt	Có thể kém hơn
+Synonym	Yếu hơn	Tốt hơn
+Paraphrase	Yếu hơn	Tốt hơn
+Error code / ID / version	Rất tốt	Có thể kém hơn
+Hiểu intent	Hạn chế	Tốt hơn
+Phụ thuộc model	Ít	Nhiều hơn
+Exact terms
+Ví dụ “RTX 5090”: Keyword Search thường có lợi thế vì cần khớp chính xác tên/mã.
+Synonym
+Ví dụ fix ↔ repair, car ↔ automobile: Semantic Search có lợi thế vì tập trung vào ý nghĩa.
+Paraphrase
+Ví dụ “make my laptop faster” ↔ “improve computer performance”: Semantic Search thường xử lý tốt hơn.
+XIII. Hybrid Search
+Trong thực tế có thể kết hợp Keyword Search và Semantic Search để tận dụng ưu điểm của cả hai.
+Keyword Search + Semantic Search → Combine Scores → Ranking → Top-K
+FinalScore = α × KeywordScore + (1 − α) × SemanticScore
+XIV. Relevance, Relevance Judgment và Ground Truth
+Relevance thể hiện mức độ candidate đáp ứng search intent. Relevance judgment là nhãn đánh giá candidate có relevant hay không. Ground truth là tập các judgment chuẩn dùng để đánh giá hệ thống.
+Query	Document	Judgment
+Q1	D1	Relevant (1)
+Q1	D2	Not Relevant (0)
+Q1	D3	Not Relevant (0)
+Test Query
+Test queries là các Query đại diện cho những nhu cầu tìm kiếm cần đánh giá. Mỗi Query nên có search intent và relevance judgments/ground truth tương ứng.
+XV. Evaluation Metrics
+1. Precision@K
+Tỷ lệ kết quả relevant trong Top-K.
+Precision@K = Relevant results in Top-K / K
+Cách nhớ: “Trong Top-K có bao nhiêu cái đúng?”
+2. Recall@K
+Tỷ lệ relevant documents đã được tìm thấy trong Top-K so với tổng số relevant documents.
+Recall@K = Relevant retrieved in Top-K / Total relevant
+Cách nhớ: “Trong tất cả cái đúng, tôi đã tìm được bao nhiêu?”
+3. MRR — Mean Reciprocal Rank
+Đánh giá vị trí của relevant result đầu tiên.
+RR = 1 / rank of first relevant
+MRR = mean(RR) across test queries
+Ví dụ: relevant đầu tiên ở rank 1 → RR = 1; rank 2 → 0.5; rank 4 → 0.25.
+Cách nhớ: “Kết quả đúng đầu tiên xuất hiện sớm đến mức nào?”
+XVI. Baseline
+Baseline là phương pháp tham chiếu dùng để so sánh chất lượng retrieval/ranking. Ví dụ dùng BM25 hoặc TF-IDF làm baseline rồi so sánh với Semantic Search.
+Method	Precision@5	Recall@5	MRR
+BM25 (Baseline)	0.65	0.60	0.58
+Semantic Search	0.80	0.75	0.78
+XVII. Toàn bộ Search Pipeline
+                    BROWSER SEARCH
+                         │
+                       Query
+                         │
+                  Search Intent
+                         │
+          ┌──────────────┴──────────────┐
+          ▼                             ▼
+   Keyword Search                 Semantic Search
+    TF-IDF / BM25                    Embedding
+          │                             │
+          └──────────────┬──────────────┘
+                         ▼
+                     Retrieval
+                         │
+                     Candidates
+                         │
+                      Ranking
+                         │
+                       Top-K
+                         │
+                  Search Results
+                         │
+                  Ground Truth
+                         │
+                    Evaluation
+                         │
+             Precision@K / Recall@K / MRR
+XVIII. Ví dụ hoàn chỉnh từ Query đến Evaluation
+Query: “How can I fix my car?”
+Candidates:
+•	D1: How to repair a car
+•	D2: How to fix an automobile
+•	D3: Best cars to buy
+•	D4: Chocolate cake recipes
+Semantic similarity minh họa:
+D1 → 0.95
+D2 → 0.92
+D3 → 0.55
+D4 → 0.10
+Ranking:
+1. D1 → 0.95
+2. D2 → 0.92
+3. D3 → 0.55
+4. D4 → 0.10
+Nếu K = 2, Top-2 là D1 và D2. Nếu ground truth xác định D1, D2 là relevant thì:
+Precision@2 = 2/2 = 1
+Recall@2 = 2/2 = 1
+RR = 1 (relevant đầu tiên ở rank 1)
+XIX. 15 câu cần nhớ
+1. IR là bài toán tìm thông tin relevant với nhu cầu người dùng.
+2. Query là nội dung người dùng nhập.
+3. Document là một đơn vị thông tin có thể tìm kiếm.
+4. Corpus là toàn bộ tập documents.
+5. Candidate là document được chọn làm ứng viên.
+6. Retrieval tìm candidates.
+7. Ranking sắp xếp candidates.
+8. Top-K là K kết quả đứng đầu sau ranking.
+9. Keyword Search dựa vào lexical overlap.
+10. TF-IDF/BM25 là các phương pháp phổ biến cho lexical retrieval.
+11. Embedding biến text thành dense vector biểu diễn đặc trưng ngữ nghĩa.
+12. Semantic Search dựa vào semantic similarity.
+13. Cosine Similarity đo độ tương đồng về hướng giữa hai vector.
+14. Precision@K / Recall@K / MRR dùng để đánh giá retrieval/ranking.
+15. Baseline là phương pháp tham chiếu để so sánh.
+XX. Bản đồ ghi nhớ nhanh
+Query → Retrieval → Candidates → Ranking → Top-K → Ground Truth → Evaluation
+
+Keyword: Text → Lexical Match → TF-IDF/BM25 → Ranking
+
+Semantic: Text → Embedding → Vector → Cosine Similarity → Ranking
+
+Evaluation: Test Queries + Ground Truth → Precision@K + Recall@K + MRR
+
+Comparison: Baseline ↔ Proposed Method
