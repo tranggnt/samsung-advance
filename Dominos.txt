@@ -115,6 +115,10 @@ Output
 	
 	
 
+package review;
+
+import java.util.Scanner;
+
 public class Dominos {
 	static int[][] a ;
 	static boolean[][] visited ;
@@ -129,7 +133,8 @@ public class Dominos {
 	};
 	
 	static void Try(int x, int y, int remain){
-		if ( remain == 1){
+		
+		if ( remain == 0){
 			ans++;
 			return;
 		}
@@ -149,11 +154,11 @@ public class Dominos {
 						used[a1][a2] = true;
 						used[a2][a1] = true;
 					}
-					boolean check =false;
+					boolean check = false;
 					for ( int i =0; i<7; i++){
 						for ( int j =0; j<8; j++){
 							if ( !visited[i][j]){
-								visited[i][j] = true;
+								//visited[i][j] = true;
 								check = true;
 								Try(i, j, remain-1);
 								break;
@@ -175,6 +180,60 @@ public class Dominos {
 		
 	}
 	
+	public static void back_track(){
+		int x = -1;
+		int y = -1;
+		
+		for ( int i=0; i<7; i++){
+			for ( int j= 0; j<8; j++){
+				if ( !visited[i][j]){
+					x = i;
+					y = j;
+					break;
+				}
+			}
+			if ( x!= -1) break;
+		}
+		
+		
+		if ( x == -1){
+			ans++;
+			return;
+		}
+		
+		for ( int c[] : d){
+			
+			int nx = x + c[0];
+			int ny = y + c[1];
+			
+			if ( nx < 0 || nx >= 7 || ny<0 || ny >= 8){
+				continue;
+			}
+			
+			if ( visited[nx][ny]) continue;
+			
+			
+			
+			int a1 = a[x][y];
+			int a2 = a[nx][ny];
+			
+			if ( used[a1][a2]) continue;
+			
+			visited[x][y] = true;
+			visited[nx][ny] = true;
+			used[a1][a2] = true;
+			used[a2][a1] = true;
+			
+			back_track();
+			
+			visited[x][y] = false;
+			visited[nx][ny] = false;
+			used[a1][a2] = false;
+			used[a2][a1] = false;
+			
+		}
+	}
+	
 	
 	
 	public static void main(String[] args){
@@ -187,15 +246,20 @@ public class Dominos {
 					a[i][j] = sc.nextInt();
 				}
 			}
-			visited = new boolean[10][10];
-			used = new boolean[10][10];
+			visited = new boolean[7][8];
+			used = new boolean[7][7];
 			ans = 0;
-			Try(0, 0, 28);
+			back_track();
 			System.out.println("#" + t + " " + ans);
 		}
 	}
 
 }
+
+
+
+
+
         sc.close();
     }
 }
