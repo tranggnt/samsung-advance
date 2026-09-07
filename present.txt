@@ -1,0 +1,218 @@
+Dưới đây là Kịch bản thuyết trình (Presentation Script) được định dạng lại chỉn chu, chi tiết và tách biệt rõ ràng từng phần. Bạn có thể copy toàn bộ nội dung này dán trực tiếp vào file Word để in ra hoặc theo dõi khi thuyết trình.
+KỊCH BẢN THUYẾT TRÌNH BÁO CÁO TUẦN 1
+Đề tài T12: Tìm Kiếm Lịch Sử Trình Duyệt Dựa Trên Xử Lý Ngôn Ngữ Tự Nhiên (NLP)
+Chương trình: Samsung Talent Program (STP) • Batch 2 - 2026
+Thực hiện: Trần Đình Hào & Nguyễn Thị Trang (PTIT)
+Bộ phận phụ trách: Multiplatform Application P
+SLIDE 1: MỞ ĐẦU & GIỚI THIỆU
+📌 Nội dung Slide:
+	Title: Tìm Kiếm Lịch Sử Trình Duyệt Dựa Trên Xử Lý Ngôn Ngữ Tự Nhiên (NLP)
+	Sinh viên thực hiện: Trần Đình Hào, Nguyễn Thị Trang (PTIT)
+	Đơn vị: Samsung R&D Center Vietnam (SRV) - Multiplatform Application P
+🎤 Lời trình bày:
+"Kính chào các anh chị Mentor và các bạn trong hội đồng!
+Chúng em đại diện cho nhóm thực hiện đề tài T12 thuộc chương trình Samsung Talent Program (STP) Batch 2 - 2026.
+Nhóm bao gồm hai thành viên là Trần Đình Hào và Nguyễn Thị Trang đến từ Viện Công nghệ Bưu chính Viễn thông (PTIT).
+Hôm nay, chúng em xin phép trình bày Báo cáo đề cương Tuần 1 cho đề tài: 'Tìm Kiếm Lịch Sử Tr trình Duyệt Dựa Trên Xử Lý Ngôn Ngữ Tự Nhiên (NLP)' dưới sự hướng dẫn của bộ phận Multiplatform Application P."
+SLIDE 2: TỔNG QUAN KHÁI NIỆM & THỰC TRẠNG TÌM KIẾM LỊCH SỬ
+📌 Nội dung Slide:
+	Browser History: Nhật ký lưu trữ trong SQLite cục bộ (Title, URL, Visit Timestamp).
+	Lexical Search (Hiện tại): Dựa vào Lexical Overlap (SQLite FTS / Substring match).
+	Hạn chế:
+	Mù ngữ cảnh (chỉ khớp ký tự bề mặt).
+	Nhiều kết quả không liên quan.
+	Thất bại với câu tự nhiên (không xử lý được từ đồng nghĩa, paraphrase).
+🎤 Lời trình bày:
+"Đầu tiên, về mặt định nghĩa:
+	Browser History là nhật ký các trang web đã duyệt bao gồm Tiêu đề (Title), Đường dẫn (URL) và Thời gian truy cập (Visit Timestamp) được lưu trữ trong CSDL SQLite cục bộ.*
+Hiện tại, trình duyệt sử dụng cơ chế Lexical Search (Keyword Search) – tức là tìm kiếm dựa vào Lexical Overlap: mức độ các từ/ngữ trong Query xuất hiện hoặc trùng lặp chính xác với ký tự trong Document.
+Cơ chế tìm kiếm từ khóa truyền thống này bộc lộ 3 hạn chế rất lớn:
+	Thứ nhất - Mù ngữ cảnh: Chỉ so khớp ký tự bề mặt.
+	Thứ hai - Nhiều kết quả không liên quan: Không đánh giá được mức độ liên quan (Relevance) của nội dung.
+	Thứ ba - Thất bại với câu tự nhiên: Không xử lý được ý định tìm kiếm (Search Intent), từ đồng nghĩa (Synonym) và cách diễn đạt khác (Paraphrase)."*
+SLIDE 3: GIẢI PHÁP ĐỀ XUẤT: TÌM KIẾM LỊCH SỬ THEO Ý ĐỊNH & NGỮ NGHĨA
+📌 Nội dung Slide:
+	Ý tưởng cốt lõi: Chuyển từ so khớp ký tự sang NLP Semantic Search (tính độ tương quan ngữ nghĩa).
+	Trải nghiệm mới: Tìm lại thông tin chỉ bằng câu nói tự do trong trí nhớ.
+	Đột phá:
+	Hiểu câu hỏi tự nhiên.
+	Xếp hạng theo độ liên quan (% Match).
+	Nhận diện từ đồng nghĩa & diễn đạt tương đương.
+🎤 Lời trình bày:
+"Chính vì vậy, nhóm đề xuất giải pháp Semantic Search – Tìm kiếm lịch sử dựa vào độ tương đồng về nghĩa thay vì chỉ dựa vào việc trùng khớp ký tự.
+Giải pháp mang lại trải nghiệm người dùng mới với 3 đột phá chính:
+	Một là - Hiểu câu hỏi tự nhiên: Chấp nhận câu hỏi truy vấn tự do mà không bắt người dùng phải nhớ chính xác từng từ khóa.
+	Hai là - Xếp hạng theo độ liên quan (% Match): Tự động đưa các kết quả có ngữ cảnh và ý nghĩa tương đồng nhất lên vị trí ưu tiên (Top-K).
+	Ba là - Nhận diện từ đồng nghĩa & Diễn đạt tương đương: Tự động liên kết các khái niệm tương đương như 'fix/repair' hay 'laptop/computer' dù từ ngữ viết hoàn toàn khác nhau."*
+SLIDE 4: BẢN CHẤT BÀI TOÁN: ĐẦU VÀO, ĐẦU RA & VÍ DỤ THỰC TẾ
+📌 Nội dung Slide:
+	Đầu vào (Input): Kho lịch sử hàng chục nghìn trang web + Câu hỏi tự nhiên của người dùng.
+	Đầu ra (Output): Danh sách Top 3–5 kết quả tốt nhất, ưu tiên theo độ tương đồng ngữ cảnh.
+	Ví dụ:
+	Query: "cách hủy commit vừa tạo mà không bị mất code"
+	Result: "Git Undo Last Commit: Keep Changes with git reset --soft" (Match 92%)
+🎤 Lời trình bày:
+"Để minh họa mô hình hoạt động của hệ thống:
+	Đầu vào (Input): Kho dữ liệu lịch sử (Corpus) gồm hàng chục nghìn trang web và Câu hỏi truy vấn (Query) nhập từ người dùng.
+	Đầu ra (Output): Danh sách Top-K (Top 3–5) kết quả có độ liên quan (Relevance) cao nhất được sắp xếp theo thứ tự ưu tiên từ cao xuống thấp.*
+Ví dụ thực tế: Khi người dùng gõ câu hỏi tự nhiên: 'cách hủy commit vừa tạo mà không bị mất code'.
+Hệ thống sẽ hiểu Search Intent và trả về bài viết tiếng Anh: 'Git Undo Last Commit: Keep Changes with git reset --soft' với độ khớp 92%.
+Ý nghĩa thực tế là biến kho lịch sử lộn xộn thành công cụ tra cứu tri thức thông minh chỉ qua một câu hỏi."
+SLIDE 5: THÁCH THỨC BÀI TOÁN: VÌ SAO TỪ ĐẦU VÀO ĐẾN ĐẦU RA LẠI KHÓ KHĂN?
+📌 Nội dung Slide:
+	Vocabulary Mismatch: Người dùng nhớ khái niệm, web đặt tên kỹ thuật.
+	Tiêu đề ngắn & Mơ hồ: Chứa từ viết tắt, từ đa nghĩa.
+	Ràng buộc On-Device & Latency cực thấp: Tuyệt đối không gửi Cloud, chạy 100% CPU/RAM cục bộ (< 150ms).
+	Đa ngôn ngữ & Thời gian: Truy vấn tiếng Việt nhưng tài liệu kết hợp tiếng Anh.
+🎤 Lời trình bày:
+"Trong thực tế, việc đưa một mô hình NLP lên trình duyệt phải giải quyết 4 thách thức kỹ thuật:
+	1. Bất đồng bộ từ vựng (Vocabulary Mismatch): Người dùng dùng từ một đằng ('sửa lỗi card màn hình'), trang web đặt tên một nẻo ('NVIDIA Display Driver Crash').
+	2. Tiêu đề ngắn & Mơ hồ ngữ cảnh: Tiêu đề trang web thường dưới 10 từ, chứa từ viết tắt hoặc từ đa nghĩa.
+	3. Ràng buộc khắt khe On-Device & Độ trễ cực thấp: Dữ liệu cá nhân nhạy cảm nên tuyệt đối không gửi lên Cloud. Mô hình phải chạy 100% cục bộ trên CPU/RAM máy tính với độ trễ phản hồi cực thấp (< 150ms).
+	4. Đa ngôn ngữ & Yếu tố thời gian: Người dùng gõ truy vấn bằng tiếng Việt nhưng tài liệu duyệt web lại chứa lẫn lộn cả tiếng Anh lẫn tiếng Việt."*
+SLIDE 6: BÀI TOÁN IR: BẢN CHẤT TÌM KIẾM & CƠ CHẾ XẾP HẠNG (RANKING)
+📌 Nội dung Slide:
+	4 thành phần IR: Corpus, Query, Candidate, Relevance Score.
+	Quy trình 2 bước:
+	Bước 1: Lọc nhanh (Retrieval) -> Chọn 100-200 candidates (< 5ms).
+	Bước 2: Chấm điểm & Xếp hạng (Ranking) -> Đưa trang tốt nhất lên Rank 1.
+	Mục tiêu: Phản hồi siêu tốc < 30ms trên On-device.
+🎤 Lời trình bày:
+"Bản chất của bài toán tìm kiếm lịch sử dựa trên các khái niệm tiêu chuẩn của Information Retrieval (IR - Stanford IR Ch.1 & 6):
+	Corpus: Toàn bộ tập dữ liệu lịch sử trình duyệt (50.000 - 100.000 trang).
+	Query: Câu hỏi/Nhu cầu tìm kiếm người dùng gõ vào.
+	Candidate: Trang web ứng viên được lựa chọn.
+	Relevance Score: Điểm đánh giá mức độ candidate đáp ứng nhu cầu người dùng.
+Quy trình xử lý được chia làm 2 bước chính:
+	Bước 1 - Lọc nhanh (Retrieval): Quét qua toàn bộ Corpus (50.000 trang) để chọn ra tập ứng viên Candidates (100–200 trang) trong dưới 5ms.
+	Bước 2 - Chấm điểm & Xếp hạng (Ranking): Sắp xếp Candidates theo điểm Relevance Score và lấy ra Top-K kết quả hiển thị lên màn hình.
+Tổng thời gian phản hồi siêu tốc dưới 30ms, tối ưu cho trải nghiệm On-device."
+SLIDE 7: HỆ THỐNG ĐỐI CHỨNG BASELINE: PHƯƠNG PHÁP TỪ KHÓA TF-IDF
+📌 Nội dung Slide:
+	Mốc đối chứng: TF-IDF (scikit-learn).
+	Công thức: TF-IDF=TF×IDF
+	TF (Term Frequency): Mức độ xuất hiện từ trong document.
+	IDF (Inverse Document Frequency): Độ hiếm/đặc trưng của từ trong toàn corpus.
+	So sánh: Lexical lệch từ ('card màn hình' vs 'VGA Driver') = 0 điểm. AI Semantic = 96% Match.
+🎤 Lời trình bày:
+"Để có thước đo chứng minh sự vượt trội của Semantic Search, nhóm thiết lập mô hình Baseline là TF-IDF (từ thư viện scikit-learn) làm mốc đối chứng.
+Trọng số TF-IDF = TF × IDF:
+	TF (Term Frequency): Thể hiện tần suất xuất hiện của từ trong document. Từ xuất hiện nhiều sẽ có TF cao.
+	IDF (Inverse Document Frequency): Phản ánh độ hiếm của từ trong toàn bộ corpus. Từ phổ biến ('cái', 'cho') bị triệt tiêu điểm, từ chuyên môn ('card đồ họa') được điểm rất cao.
+Như trên bảng so sánh: Khi gõ 'card màn hình', Keyword Search (TF-IDF) bị thất bại (0 điểm) do lệch từ vựng với 'VGA Driver'. Ngược lại, AI Semantic sẽ hiểu được ngữ cảnh và đạt 96% độ tương đồng."
+SLIDE 8: TEXT EMBEDDING: MÁY TÍNH "SỐ HÓA" Ý NGHĨA CÂU CHỮ NHƯ THẾ NÀO?
+📌 Nội dung Slide:
+	Từ câu chữ đến Vector 384 chiều:
+	Step 1: Input text.
+	Step 2: AI Embedding Model (Transformer).
+	Step 3: Output Dense Vector (384 số thực).
+	Bản đồ ý nghĩa trong không gian Vector:
+	Cụm Git (96% similarity).
+	Cụm Phần cứng (95% similarity).
+	Lạc đề ('công thức nấu ăn' -> 2% similarity).
+	Thông số: Model ~80MB, Vector 384 số, CPU ~10ms, RAM <250MB.
+🎤 Lời trình bày:
+"Trọng tâm của Semantic Search là Text Embedding – quá trình sử dụng Pretrained Embedding Model để biến văn bản (Text) thành một Dense Vector cố định (384 chiều) biểu diễn phân tán các đặc trưng ngữ nghĩa.
+Cơ chế hoạt động gồm 3 bước:
+	Bước 1 (Input): Nhập câu truy vấn tự nhiên.
+	Bước 2 (AI Model): Mạng Transformer phân tích toàn diện ngữ cảnh và ý định.
+	Bước 3 (Output): Biến câu thành mảng 384 số thực (đóng vai trò làm 'dấu vân tay ý nghĩa').
+Trong không gian Vector:
+	Các câu lệnh Git như 'hủy commit git' và 'undo commit' sẽ nằm rất sát nhau (96% tương đồng).
+	Các cụm phần cứng như 'card màn hình' và 'GPU driver' tự động gom chung nhóm (95%).
+	Những câu lạc đề như 'công thức nấu ăn' sẽ bị đẩy ra xa góc đối diện (2%)."*
+SLIDE 9: COSINE SIMILARITY: ĐO MỨC ĐỘ TRÙNG KHỢP Ý NGHĨA NHƯ THẾ NÀO?
+📌 Nội dung Slide:
+	Công thức: "cosine_similarity" (q,d)=(q⋅d)/(‖q‖‖d‖)
+	Ý nghĩa: Đo góc giữa các Vector (Thang điểm 0% - 100%). Góc càng hẹp -> Ý nghĩa càng trùng khớp.
+	Tối ưu Hardware: Quy về phép nhân số thực đơn giản (Dot Product). Tận dụng SIMD / AVX2 của CPU, so khớp 50.000 trang web chỉ mất 2 - 5 ms.
+🎤 Lời trình bày:
+"Để so sánh độ tương đồng giữa Vector Query (q) và Vector Document (d), hệ thống sử dụng công thức Cosine Similarity:
+"cosine_similarity" (q,d)=(q⋅d)/(‖q‖‖d‖)
+Công thức này đo độ tương đồng về hướng giữa 2 vector. Vector có góc càng hẹp thì giá trị Cosine càng gần 1 (100%), thể hiện ý nghĩa càng trùng khớp.
+	Vector A (Góc hẹp ~19°): Khớp 94% -> Cùng ý định sửa card màn hình (Rank 1).
+	Vector C (Góc vuông 90°): Khớp 0% -> Hoàn toàn lạc đề.
+Đặc biệt, phép toán này được đưa về dạng tích vô hướng (Dot Product). Nhờ tận dụng tập lệnh tính toán song song SIMD / AVX2 tích hợp sẵn trên CPU, máy tính có thể so khớp Query với 50.000 trang web chỉ trong 2–5 ms mà không cần đến GPU đắt tiền."
+SLIDE 10: SO SÁNH LEXICAL VS. SEMANTIC & QUY TRÌNH LẤY TOP-K
+📌 Nội dung Slide:
+	So sánh kịch bản thực tế:
+	URL chuẩn -> Cả 2 đều khớp 100%.
+	Lệch từ / Từ đồng nghĩa -> Lexical 0 điểm, Semantic Match 96% - 97%.
+	Quy trình 2 pha (Offline / Online):
+	Pha 1 (Tính trước - Offline): Xem web mới -> AI trích xuất Title & URL -> Lưu vector vào Index.
+	Pha 2 (Tìm nhanh - Online): Gõ tìm kiếm -> Tính vector câu hỏi (10ms) -> So khớp Index -> Trả Top 5 (< 30ms).
+🎤 Lời trình bày:
+"Khi so sánh thực tế giữa 2 phương pháp:
+	Với Exact Terms (như link URL chuẩn): Cả 2 phương pháp đều tìm ra ngay.
+	Với Synonym / Paraphrase (diễn đạt tự nhiên, lệch từ): AI Semantic hoàn toàn áp đảo nhờ hiểu được ý định và từ đồng nghĩa.
+Để tối ưu hiệu năng On-device, hệ thống áp dụng Precompute Candidate Embeddings chia thành 2 pha tách biệt:
+	Pha 1 (OFFLINE - Tính trước): Mỗi khi xem web mới, hệ thống tự động trích xuất tiêu đề, tạo vector embedding và lưu sẵn vào kho Index.
+	Pha 2 (ONLINE - Tìm nhanh): Khi người dùng gõ tìm kiếm, hệ thống mã hóa câu hỏi thành vector (10ms), so khớp với Index và trả kết quả Top 5 tức thì trong dưới 30ms."*
+SLIDE 11: VAI TRÒ THỰC SỰ CỦA VECTOR DATABASE TRONG HỆ THỐNG
+📌 Nội dung Slide:
+	Phân định nhiệm vụ:
+	SQLite (Source of Truth): Lưu dữ liệu gốc (URL, Title, Visit Time).
+	Vector Index (Mục lục siêu tốc): Lưu cặp (ID, Mảng 384 float) để chạy thuật toán so khớp.
+	Thư viện On-device: FAISS hoặc SQLite-vec.
+	Cơ chế In-Process: Chạy trực tiếp trong tiến trình ứng dụng Windows, không cần server riêng.
+🎤 Lời trình bày:
+"Nhóm thiết kế kiến trúc kết hợp giữa CSDL Quan hệ và CSDL Vector:
+	1. SQLite (Kho dữ liệu gốc - Source of Truth): Lưu trữ dữ liệu thô bao gồm URL, Title, Visit Time và số lần truy cập.
+	2. Vector Index (Mục lục tìm kiếm siêu tốc): Chỉ lưu cặp (ID, Mảng 384 số float) phục vụ cho thuật toán so khớp vector hàng chục nghìn trang trong 2-5ms.
+Nhóm đề xuất sử dụng các thư viện On-device gọn nhẹ như FAISS hoặc SQLite-vec chạy cơ chế In-Process trực tiếp trong ứng dụng Windows. Cơ chế này không cần server riêng, giúp tiết kiệm tài nguyên và bảo mật tuyệt đối dữ liệu On-device."
+SLIDE 12: PHƯƠNG PHÁP LUẬN ĐÁNH GIÁ HIỆU NĂNG RETRIEVAL & ĐỐI CHỨNG THỰC NGHIỆM
+📌 Nội dung Slide:
+	3 yếu tố đánh giá chuẩn Stanford IR (Ch. 8):
+	Relevance: Độ liên quan thực tế.
+	Ground Truth: Đáp án chuẩn tham chiếu (1 - Đúng, 0 - Sai).
+	Test Queries: Bộ 30–50 câu hỏi thực tế.
+	Phương pháp đối chứng: So sánh trực tiếp Baseline (TF-IDF) vs. Mô hình đề tài (Semantic Search) trên cùng 1 tập dữ liệu lịch sử thực.
+🎤 Lời trình bày:
+"Để đánh giá hệ thống một cách khoa học và minh bạch theo chuẩn Stanford IR Ch. 8, nhóm chuẩn bị 3 yếu tố nền tảng:
+	1. Độ liên quan thực tế (Relevance): Bài viết trả về có thực sự giải quyết điều người dùng đang tìm kiếm hay không.
+	2. Đáp án chuẩn tham chiếu (Ground Truth): Nhóm dán nhãn thủ công (1 điểm nếu Đúng, 0 điểm nếu Sai).
+	3. Bộ câu hỏi kiểm thử (Test Queries): Bộ 30–50 câu hỏi thực tế bao gồm câu dài, từ đồng nghĩa, gõ tiếng Việt tìm web tiếng Anh.
+Nhóm sẽ chạy đối chứng trực tiếp giữa Baseline (TF-IDF) và Mô hình đề tài (Semantic Search) trên cùng một tập dữ liệu lịch sử thực để chứng minh sự cải thiện bằng số liệu cụ thể trước Hội đồng."
+SLIDE 13: 3 CHỈ SỐ ĐO LƯỜNG HIỆU NĂNG QUA 1 VÍ DỤ THỰC NGHIỆM
+📌 Nội dung Slide:
+	Ví dụ: Kho lịch sử có 10 bài về Git. Màn hình hiển thị Top 5 (4 bài đúng, 1 bài lạc đề).
+	Precision@K (Độ chính xác): "Số bài đúng" /"K" =4/5=80%
+	Recall@K (Khả năng bao phủ): "Số bài tìm thấy" /"Tổng bài trong máy" =4/10=40%
+	MRR (Mean Reciprocal Rank): Vị trí ưu tiên Rank 1. (Đúng ở Dòng 1 -> RR=1.0; Dòng 2 -> RR=0.5).
+🎤 Lời trình bày:
+"Chất lượng hệ thống sẽ được lượng hóa chính xác qua 3 chỉ số IR tiêu chuẩn:
+	1. Precision@K (Độ chính xác kết quả): Đo tỷ lệ thông tin hữu ích trong Top-K kết quả trả về. Trong ví dụ Top 5 có 4 bài đúng -> Precision@5 = 80%.
+	2. Recall@K (Khả năng bao phủ tài liệu): Đo tỷ lệ bài tìm thấy so với tổng số bài đúng có trong máy. Tìm được 4/10 bài -> Recall@5 = 40%.
+	3. MRR (Mean Reciprocal Rank): Đánh giá vị trí xuất hiện của kết quả đúng đầu tiên. Nếu bài đúng nhất nằm ngay Dòng 1, điểm đạt tối đa là 1.0.
+Chỉ số MRR càng gần 1.0 chứng tỏ trang web đúng nhất luôn được hệ thống tự động ưu tiên hiển thị ngay dòng đầu tiên."
+SLIDE 14: MỤC TIÊU ĐỀ TÀI: IN-SCOPE VS. OUT-OF-SCOPE
+📌 Nội dung Slide:
+	In-Scope (Bao gồm):
+	Tìm kiếm ngữ nghĩa trên trường Title & URL.
+	Xử lý 100% On-device trên Windows.
+	Dùng Pretrained Embedding nhẹ & Vector Index.
+	Đánh giá đối chứng với Baseline TF-IDF qua Precision@K, Recall@K, MRR.
+	Out-of-Scope (Không bao gồm):
+	Crawl HTML chi tiết toàn bộ web.
+	Gửi dữ liệu lên Cloud LLM (OpenAI, Gemini).
+	Xây dựng Chatbot GenAI / RAG.
+	Can thiệp biên dịch lại mã nguồn Chromium.
+🎤 Lời trình bày:
+"Để đảm bảo tính khả thi và tập trung đúng mục tiêu nghiên cứu, nhóm xác định rõ ranh giới đề tài:
+	Về In-Scope (Thực hiện): Tìm kiếm ngữ nghĩa trên Title & URL; Chạy On-device 100% trên môi trường Windows; Sử dụng Pretrained Embedding nhẹ; và Đánh giá đối chứng thực nghiệm với Baseline TF-IDF qua các chỉ số Precision@K, Recall@K, MRR.
+	Về Out-of-Scope (Không thực hiện): Không crawl bóc tách toàn bộ HTML chi tiết để tránh phình bộ nhớ; Không gửi dữ liệu cá nhân lên Cloud LLM; Không làm Chatbot GenAI/RAG; Không đồng bộ đám mây và Không can thiệp biên dịch lại bộ mã nguồn Chromium."*
+SLIDE 15: KẾ HOẠCH THỰC HIỆN: TUẦN 1 ĐÃ LÀM & TRỌNG TÂM TUẦN TỚI
+📌 Nội dung Slide:
+	Đã hoàn thành (Tuần 1):
+	Nghiên cứu nền tảng lý thuyết IR & NLP.
+	Mô hình hóa bài toán & Xác định phạm vi (In/Out-of-Scope).
+	Hoàn thiện báo cáo đề cương Tuần 1.
+	Kế hoạch Tuần 2:
+	Thu thập & làm sạch dữ liệu lịch sử (Title, URL từ SQLite).
+	Khảo sát & chọn mô hình Embedding gọn nhẹ (all-MiniLM-L6-v2, multilingual-e5-small).
+	Lập trình Baseline TF-IDF và chạy thử nghiệm Prototype Semantic Search.
+🎤 Lời trình bày:
+"Tổng kết tiến độ thực hiện:
+	Trong Tuần 1: Nhóm đã hoàn thành việc nghiên cứu nền tảng lý thuyết IR & NLP; Mô hình hóa bài toán; Phân định ranh giới phạm vi thực hiện và Hoàn thiện báo cáo đề cương trình bày trước Mentor.
+	Trọng tâm Tuần 2: Nhóm sẽ tiến hành thu thập & làm sạch dữ liệu lịch sử duyệt web thực tế từ CSDL SQLite; Khảo sát lựa chọn các mô hình Pretrained Embedding gọn nhẹ tối ưu cho CPU; Lập trình Baseline TF-IDF bằng scikit-learn và Xây dựng Prototype Semantic Search đầu tiên để chạy so sánh đối chứng."*
+
