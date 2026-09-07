@@ -120,6 +120,7 @@ public class HugoVaOng {
     			if ( nx >=0 && ny >=0 && nx <n && ny <m && !visited[nx][ny]){
     				visited[nx][ny] = true;
     				dfs(nx, ny, cnt+1, sum+a[nx][ny]);
+    				if ( cnt == 2) dfs(r, c, cnt+1, sum+a[nx][ny]);
     				visited[nx][ny] = false;
     			}
     		}
@@ -131,6 +132,7 @@ public class HugoVaOng {
     			if ( nx >=0 && ny >=0 && nx <n && ny <m && !visited[nx][ny]){
     				visited[nx][ny] = true;
     				dfs(nx, ny, cnt+1, sum+a[nx][ny]);
+    				if ( cnt == 2) dfs(r, c, cnt+1, sum+a[nx][ny]);
     				visited[nx][ny] = false;
     			}
     		}
