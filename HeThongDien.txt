@@ -97,8 +97,8 @@ public class HeThongDien {
 			for ( int i=0; i<h; i++){
 				int u = sc.nextInt();
 				int v = sc.nextInt();
-				adj[u][ke[v]++] = v;
-				adj[v][ke[u]++] = u;
+				adj[u][ke[u]++] = v;
+				adj[v][ke[v]++] = u;
 			}
 			
 			int front = 0, rear = 0;
