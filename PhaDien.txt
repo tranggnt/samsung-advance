@@ -55,3 +55,100 @@ Output:
 3
 
 0
+
+
+import java.util.*;
+
+public class PhaDien {
+    
+    // ====== PHẦN 1: DFS - Duyệt tất cả đảo liên kết ======
+    static void dfs(int[][] adj, boolean[] visited, int node, int excluded) {
+        visited[node] = true;  // Đánh dấu đảo hiện tại đã thăm
+        
+        // Duyệt tất cả đảo khác
+        for (int i = 0; i < adj.length; i++) {
+            // Nếu có kết nối điện (=1) và chưa thăm và không phải đảo bị phá
+            if (adj[node][i] == 1 && i != excluded && !visited[i]) {
+                dfs(adj, visited, i, excluded);  // Đi tiếp
+            }
+        }
+    }
+    
+    
+    // ====== PHẦN 2: Đếm số nhóm đảo liên kết ======
+    static int countComponents(int[][] adj, int excluded) {
+        int n = adj.length;
+        boolean[] visited = new boolean[n];  // Theo dõi đảo đã thăm
+        int components = 0;  // Đếm số nhóm
+        
+        for (int i = 0; i < n; i++) {
+            // Nếu chưa thăm và không phải đảo bị phá
+            if (i != excluded && !visited[i]) {
+                dfs(adj, visited, i, excluded);  // Thăm toàn bộ nhóm này
+                components++;  // Tăng số nhóm
+            }
+        }
+        
+        return components;
+    }
+    
+    
+    // ====== PHẦN 3: Tìm đảo nào khi phá sẽ tách hệ thống ======
+    static int findIsland(int[][] adj) {
+        int n = adj.length;
+        
+        // Bước 1: Đếm số nhóm ban đầu
+        int originalComponents = countComponents(adj, -1);
+        System.out.println("Số nhóm ban đầu: " + originalComponents);
+        
+        // Bước 2: Thử phá từng đảo một
+        for (int island = 0; island < n; island++) {
+            int newComponents = countComponents(adj, island);
+            System.out.println("Phá đảo " + island + " → " + newComponents + " nhóm");
+            
+            // Nếu số nhóm tăng = tách được hệ thống
+            if (newComponents > originalComponents) {
+                System.out.println("✓ Tìm thấy! Đảo " + island + " là điểm yếu");
+                return island;
+            }
+        }
+        
+        // Không tìm thấy
+        System.out.println("✗ Không có đảo nào tách hệ thống");
+        return 0;
+    }
+    
+    
+    // ====== PHẦN 4: Chương trình chính ======
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Đọc số test case
+        int t = sc.nextInt();
+        
+        while (t-- > 0) {
+            System.out.println("\n=== TEST CASE MỚI ===");
+            
+            // Đọc số đảo
+            int n = sc.nextInt();
+            System.out.println("Số đảo: " + n);
+            
+            // Đọc ma trận kết nối điện
+            int[][] adj = new int[n][n];
+            System.out.println("Ma trận kết nối:");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    adj[i][j] = sc.nextInt();
+                }
+                System.out.println(Arrays.toString(adj[i]));
+            }
+            
+            // Tìm và in kết quả
+            int result = findIsland(adj);
+            System.out.println("\n>>> ĐÁP ÁN: " + result);
+        }
+        
+        sc.close();
+    }
+}
+
