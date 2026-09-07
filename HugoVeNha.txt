@@ -220,6 +220,102 @@ Chi phí
 
 140
 
+
+package review;
+
+import java.util.Scanner;
+
+public class HugoVeNha {
+	
+	static int n, ans;
+	static int[] soldier, cost, choose, fatig;
+	
+	static void Try( int cong, int total, int binhsi){
+		if ( total > ans) return;
+		
+		if ( cong == n+1) {
+			if ( total<ans) ans =total;
+			return;
+		}
+		
+		Try(cong+1, total+cost[cong], binhsi);
+		
+		choose[cong] = soldier[cong];
+		fatig[cong] = 3;
+		
+		Try(cong+1, total+cost[cong]*2, binhsi+soldier[cong]);
+		choose[cong] = 0;
+		fatig[cong] = 0;
+		
+		// binh si danh dich
+		
+		if ( binhsi >= soldier[cong]){
+			
+			int opp = soldier[cong];
+			int[] saveChoose = new int[25];
+			int[] saveFatig = new int[25];
+			
+			for ( int i=1; i<=n; i++){
+				saveChoose[i] = choose[i];
+				saveFatig[i] = fatig[i];
+			}
+			
+			int kill = opp;
+			for ( int i=1; i<=n; i++){
+				if ( choose[i] > 0){
+					if ( choose[i] <= kill){
+						kill -= choose[i];
+						choose[i] = 0;
+					}else{
+						choose[i] -= kill;
+						kill = 0;
+					}
+				}
+			}
+			
+			for ( int i=1; i<=n; i++){
+				if ( choose[i] > 0){
+					fatig[i] -=1;
+					if ( fatig[i] == 0){
+						binhsi -= choose[i];
+						choose[i] = 0;
+					}
+				}
+			}
+			Try(cong+1, total, binhsi-opp);
+			
+			for ( int i=1; i<=n; i++){
+				choose[i] = saveChoose[i];
+				fatig[i] = saveFatig[i];
+			}
+		}
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		 int tc = sc.nextInt();
+		 for ( int t =1; t<=tc; t++){
+			 n = sc.nextInt();
+			 soldier = new int[n+5];
+			 cost = new int[n+5];
+			 choose = new int[n+5];
+			 fatig = new int[n+5];
+			 for ( int i=1; i<=n; i++){
+				 soldier[i] = sc.nextInt();
+				 cost[i] = sc.nextInt();
+				 choose[i] = 0;
+				 fatig[i] = 0;
+			 }
+			 
+			 ans = Integer.MAX_VALUE;
+			 Try(1, 0, 0);
+			 System.out.println("#"+ t+ " " + ans);
+		 }
+	}
+
+}
+
+
  
 
  
