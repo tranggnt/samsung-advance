@@ -180,3 +180,70 @@ Case #1 1
 
 Case #2 2
 
+import java.util.Scanner;
+
+public class Main {
+    static int[][] matrix = new int[105][25];
+
+    // Hàm kiểm tra 2 hàng row1 và row2 có giống hệt nhau không
+    static boolean isSameRow(int row1, int row2, int M) {
+        for (int j = 0; j < M; j++) {
+            if (matrix[row1][j] != matrix[row2][j]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+
+        int T = sc.nextInt();
+        for (int tc = 1; tc <= T; tc++) {
+            int N = sc.nextInt();
+            int M = sc.nextInt();
+            int K = sc.nextInt();
+
+            // Đọc dữ liệu ma trận
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < M; j++) {
+                    matrix[i][j] = sc.nextInt();
+                }
+            }
+
+            int maxRows = 0;
+
+            // Thử xét từng hàng i làm hàng chuẩn
+            for (int i = 0; i < N; i++) {
+                int zeroCount = 0;
+                for (int j = 0; j < M; j++) {
+                    if (matrix[i][j] == 0) {
+                        zeroCount++;
+                    }
+                }
+
+                // Điều kiện để hàng i có thể biến thành toàn số 1
+                if (zeroCount <= K && (K - zeroCount) % 2 == 0) {
+                    int currentCount = 0;
+
+                    // Đếm số hàng trong ma trận giống hệt hàng i
+                    for (int k = 0; k < N; k++) {
+                        if (isSameRow(i, k, M)) {
+                            currentCount++;
+                        }
+                    }
+
+                    // Cập nhật số lượng hàng tối đa
+                    if (currentCount > maxRows) {
+                        maxRows = currentCount;
+                    }
+                }
+            }
+
+            System.out.println("Case #" + tc + " " + maxRows);
+        }
+        sc.close();
+    }
+}
+
