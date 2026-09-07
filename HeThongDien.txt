@@ -63,3 +63,75 @@ Output:
 1
 
 3
+package review;
+
+import java.util.Scanner;
+
+public class HeThongDien {
+	
+	static int n, m, h;
+	static int[][] adj;
+	static int[] ke, tram, dis;
+	
+	
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t = 1; t<=tc; t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			h = sc.nextInt();
+			adj = new int[n+5][n+5];
+			ke = new int[n];
+			tram = new int[m];
+			dis = new int[n+5];
+			for ( int i=0; i<n; i++){
+				dis[i] = Integer.MAX_VALUE;
+			}
+			for ( int i=0; i<m; i++){
+				tram[i] = sc.nextInt();
+				dis[tram[i]] = 0;
+			}
+			
+			for ( int i=0; i<h; i++){
+				int u = sc.nextInt();
+				int v = sc.nextInt();
+				adj[u][ke[v]++] = v;
+				adj[v][ke[u]++] = u;
+			}
+			
+			int front = 0, rear = 0;
+			int[] q = new int[n*h];
+			
+			for ( int c : tram){
+				System.out.print(c + " ");
+				q[rear++] = c;
+			}
+			
+			while ( front < rear){
+				int u = q[front++];
+				for ( int i=0; i<ke[u]; i++){
+					int v = adj[u][i];
+					if ( dis[v] == Integer.MAX_VALUE){
+						dis[v] = dis[u] + 1;
+						q[rear++] = v;
+					}
+				}
+			}
+			
+			int max = Integer.MIN_VALUE;
+			int ans = -1;
+			for ( int i=0; i<n; i++){
+				if ( dis[i] > max){
+					max = dis[i];
+					ans = i;
+				}
+			}
+			
+			System.out.println(ans);
+			
+		}
+	}
+
+}
