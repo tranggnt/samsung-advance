@@ -1,0 +1,182 @@
+Đảo Cột
+Trong ma trận nhị phân, phép đảo cột của ma trận là việc thay thế các giá trị của cột
+đó từ 0 -> 1 và từ 1 -> 0. Cho ma trận nhị phân NxM (N <= 100, M <= 20), hỏi sau K
+lần đảo cột thì số hàng gồm toàn số 1 nhiều nhất có thể thu được là bao nhiêu. (Yêu
+cầu phải đảo cột đúng K lần và một cột có thể được đảo nhiều lần)
+Ví dụ
+Với ví dụ bên, nếu K = 1, ta sẽ có kết quả lớn nhất khi đảo cột thứ 2 và thu được 1
+hàng gồm toàn số 1 là hàng thứ 4. Nếu K = 2, kết quả thu được là 2 khi đảo cột thứ 2
+và cột thứ 3.
+
+ 
+
+0
+
+1
+
+0
+
+0
+
+0
+
+1
+
+0
+
+0
+
+1
+
+1
+
+0
+
+0
+
+0
+
+0
+
+0
+
+1
+
+0
+
+1
+
+1
+
+1
+
+1
+
+0
+
+0
+
+1
+
+1
+
+ 
+
+K=1, có 1 hàng toàn 1
+
+0
+
+0
+
+0
+
+0
+
+0
+
+1
+
+1
+
+0
+
+1
+
+1
+
+0
+
+1
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+1
+
+1
+
+ 1
+
+1
+
+0
+
+1
+
+1
+
+ 
+
+K=2, có 2 hàng toàn 1
+
+0
+
+0
+
+1
+
+0
+
+0
+
+1
+
+1
+
+1
+
+1
+
+1
+
+0
+
+1
+
+1
+
+0
+
+0
+
+1
+
+1
+
+0
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+ 
+
+Input: Cho 3 số N, M, K
+
+Tiếp theo là ma trận NxM
+
+Output: In ra số lượng hàng toàn 1 nhiều nhất định dạng như bên dưới
+
+Case #1 1
+
+Case #2 2
+
