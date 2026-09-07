@@ -180,70 +180,59 @@ Case #1 1
 
 Case #2 2
 
+package review;
+
 import java.util.Scanner;
 
-public class Main {
-    static int[][] matrix = new int[105][25];
+public class FlipColumn {
+	
+	static int n, m , k, ans;
+	static int a[][];
+	
+	static boolean check ( int i, int k){
+		for ( int j= 0; j<m; j++){
+			if ( a[i][j] != a[k][j]) return false;
+		}
+		return true;
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			k = sc.nextInt();
+			ans = 0;
+			a = new int [n+5][m+5];
+			
+			for ( int i=0; i<n; i++){
+				for ( int j=0; j<m; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			
+			for ( int i=0; i<n; i++){
+				int cnt = 0;
+				
+				for ( int j=0; j<m; j++){
+					if ( a[i][j] == 0) cnt++;
+				}
+				
+				if ( cnt <=k && (k-cnt)%2==0 ){
+					int count = 0;
+					
+					for ( int u=0; u<n; u++){
+						if ( check(i,u)) count ++;
+					}
+					if ( count > ans ) ans = count;
+				}
+			}
+			
+			System.out.println("Case #" + t + " " + ans);
+		}
+	}
 
-    // Hàm kiểm tra 2 hàng row1 và row2 có giống hệt nhau không
-    static boolean isSameRow(int row1, int row2, int M) {
-        for (int j = 0; j < M; j++) {
-            if (matrix[row1][j] != matrix[row2][j]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        if (!sc.hasNextInt()) return;
-
-        int T = sc.nextInt();
-        for (int tc = 1; tc <= T; tc++) {
-            int N = sc.nextInt();
-            int M = sc.nextInt();
-            int K = sc.nextInt();
-
-            // Đọc dữ liệu ma trận
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    matrix[i][j] = sc.nextInt();
-                }
-            }
-
-            int maxRows = 0;
-
-            // Thử xét từng hàng i làm hàng chuẩn
-            for (int i = 0; i < N; i++) {
-                int zeroCount = 0;
-                for (int j = 0; j < M; j++) {
-                    if (matrix[i][j] == 0) {
-                        zeroCount++;
-                    }
-                }
-
-                // Điều kiện để hàng i có thể biến thành toàn số 1
-                if (zeroCount <= K && (K - zeroCount) % 2 == 0) {
-                    int currentCount = 0;
-
-                    // Đếm số hàng trong ma trận giống hệt hàng i
-                    for (int k = 0; k < N; k++) {
-                        if (isSameRow(i, k, M)) {
-                            currentCount++;
-                        }
-                    }
-
-                    // Cập nhật số lượng hàng tối đa
-                    if (currentCount > maxRows) {
-                        maxRows = currentCount;
-                    }
-                }
-            }
-
-            System.out.println("Case #" + tc + " " + maxRows);
-        }
-        sc.close();
-    }
 }
+
 
