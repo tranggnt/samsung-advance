@@ -446,19 +446,19 @@ public class ThongTriKhuVuc {
 				}
 			}
 			
-			for ( int i=0; i<n; i++){
-				for ( int j=0; j<n; j++){
-					System.out.print(b[i][j] + " ");
-				}
-				System.out.println();
-			}
+//			for ( int i=0; i<n; i++){
+//				for ( int j=0; j<n; j++){
+//					System.out.print(b[i][j] + " ");
+//				}
+//				System.out.println();
+//			}
 			int ans = 0;
 			visited = new boolean[n+5][n+5];
 			for ( int i=0;i <n; i++){
 				for ( int j =0; j<n; j++){
 					if ( !visited[i][j]){
 						ans++;
-						Point[] q = new Point[n*n];
+						Point[] q = new Point[n*n+10];
 						
 						int front = 0, rear = 0;
 						q[rear++] = new Point(i,j);
