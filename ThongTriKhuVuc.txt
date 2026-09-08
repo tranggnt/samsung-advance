@@ -26,6 +26,167 @@ khi sáp nhập.
 
 5
 
+
+package review;
+
+import java.util.Scanner;
+
+public class ThongTriKhuVuc {
+	
+	static int n;
+	static int[][] a, b;
+	static int[] cnt;
+	static boolean[][] visited;
+	static boolean[][] check;
+	static boolean[][] vis;
+	static int[][] d = {
+		{1, 0},
+		{-1, 0},
+		{0, 1},
+		{0, -1}
+	};
+	
+	static class Point{
+		int x;
+		int y;
+		Point(int x, int y){
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
+	static int findMaxCount(){
+		int max = -1;
+		for ( int i =1; i<=5; i++ ){
+			if ( cnt[i] >= max) max = cnt[i];
+		}
+		return max;
+	}
+	
+	static void change(int max){
+		for ( int i = 0; i<n; i++){
+			for ( int j=0;j<n; j++){
+				if ( b[i][j] == 0 && !check[i][j]){
+					b[i][j] = max;
+				}
+			}
+		}
+	}
+	
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			a = new int[n+5][n+5];
+			b = new int[n+5][n+5];
+			
+			for ( int i=0; i<n; i++){
+				for ( int j=0; j<n; j++){
+					a[i][j] = b[i][j] = sc.nextInt();
+					//cnt[a[i][j]] = 0;
+				}
+			}
+			
+			check = new boolean[n+5][n+5];
+			
+			for ( int i=0; i<n; i++){
+				for ( int j=0; j<n; j++){
+					if ( a[i][j] == 0 && !check[i][j]){
+						
+						check[i][j] = true;
+						visited = new boolean[n+5][n+5];
+						cnt = new int[n+5];
+						Point[] q = new Point[n*n];
+						visited[i][j] = true;
+						int front = 0, rear = 0;
+						q[rear++] = new Point(i, j);
+						
+						while ( front < rear){
+							Point cur = q[front++];
+							
+							
+							for ( int c[] : d){
+								int nx = cur.x + c[0];
+								int ny = cur.y + c[1];
+								
+								if ( nx < 0 || ny < 0 || nx >=n || ny >=n){
+									continue;
+								}
+								
+								if ( visited[nx][ny]) continue;
+								
+								if ( a[cur.x][cur.y] == 0){
+									
+									if ( a[nx][ny] == 0 ) {
+										check[nx][ny] = true;
+										q[rear++] = new Point(nx, ny);
+										visited[nx][ny] = true;
+									}
+									
+									if ( a[nx][ny] != 0){
+										cnt[a[nx][ny]]++;
+										q[rear++] = new Point(nx, ny);
+										visited[nx][ny] = true;
+									}
+									
+								}else {
+									if (a[cur.x][cur.y] == a[nx][ny]){
+										cnt[a[nx][ny]]++;
+										q[rear++] = new Point(nx, ny);
+										visited[nx][ny] = true;
+									}
+								}
+								
+							}
+						}
+						
+						int maxCount = findMaxCount();
+						System.out.println(maxCount);
+						
+						change(maxCount);
+						
+					}
+				}
+			}
+			int ans = 1;
+			Point[] q = new Point[n*n];
+			visited = new boolean[n+5][n+5];
+			int front = 0, rear = 0;
+			q[rear++] = new Point(0,0);
+			visited[0][0] = true;
+			while ( front < rear){
+				Point cur = q[front++];
+				
+				for ( int c[]:d){
+					int nx = cur.x + c[0];
+					int ny = cur.y + c[1];
+					
+					if ( nx <0 || ny<0 || nx>=n || ny >=n) continue;
+					if ( visited[nx][ny]) continue;
+					
+					if ( b[nx][ny] == b[cur.x][cur.y]) {
+						q[rear++] = new Point(nx, ny);
+						visited[nx][ny] = true;
+					}
+					
+					if ( b[nx][ny] != b[cur.x][cur.y] ){
+						ans++;
+						q[rear++] = new Point(nx, ny);
+						visited[nx][ny] = true;
+					}
+				}
+			}
+			
+			System.out.println(ans);
+			
+		}
+	}
+
+}
+
+
 0
 
 0
