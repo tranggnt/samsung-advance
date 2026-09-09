@@ -408,32 +408,7 @@ public class HugoGold2 {
 	}
 	
 	
-//	public static void bfs(int x, int y){
-//		Point[] q = new Point[n*n];
-//		int front = 0;
-//		int rear = 0;
-//		q[rear] = new Point(x, y);
-//		rear++;
-//		while ( front < rear){
-//			Point cur = q[front];
-//			front ++;
-//			for ( int c[] : d){
-//				int nx = cur.x+c[0];
-//				int ny = cur.y+c[1];
-//				
-//				if ( nx <=0 || ny <=0 || nx > n || ny >n) continue;
-//				if ( a[nx][ny] == 0) continue;
-//				if ( dis[nx][ny] != -1) continue;// da tham 
-//				count[nx][ny] ++;
-//				//distance[nx][ny] = cur.cost+1;
-//				dis[nx][ny] = dis[cur.x][cur.y] + 1;
-//				q[rear] = new Point(nx, ny, dis[nx][ny]);
-//				rear++;
-//			}
-//		}
-//		//return;
-//		
-//	}
+
 	static void resetDis(){
 		for ( int i=1; i<=n; i++){
 			for ( int j=1; j<=n; j++){
@@ -473,10 +448,9 @@ public class HugoGold2 {
 				resetDis();
 				Point p = goldPos[i];
 				dis[p.x][p.y] = 0;
-				System.out.println("check x: " + p.x + " check y: " + p.y);
 				bfs(p.x, p.y);
 				for ( int ii =1; ii<=n; ii++ ){
-					for ( int jj=1; jj<=1; jj++){
+					for ( int jj=1; jj<=n; jj++){
 						max_cost[ii][jj] = Math.max(max_cost[ii][jj], dis[ii][jj]);
 					}
 				}
@@ -486,12 +460,12 @@ public class HugoGold2 {
 			
 			for ( int i=1; i<=n; i++){
 				for ( int j=1; j<=n; j++){
-					//System.out.println("check cnt: " + count[i][j]);
+					
 					if ( count[i][j] == g){
-						System.out.println("check cnt: " + count[i][j]);
+						
 						if ( max_cost[i][j] < ans && max_cost[i][j] != -1){
 							ans = max_cost[i][j];
-							System.out.println("check ans: " + ans + " " + i + " " + j);
+							
 						}
 					}
 				}
