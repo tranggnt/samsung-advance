@@ -172,3 +172,100 @@ public class HugoVaOng {
 
 }
 
+package advanced;
+
+import java.util.Scanner;
+
+public class HugoVaOng {
+	
+	static boolean visited[][];
+	static int n, m;
+	static int ans;
+	static int[][] a;
+	
+	static int dirEven[][] = {
+		{1,0},
+		{-1,0},
+		{-1,-1},
+		{-1,1},
+		{0,1},
+		{0,-1}
+	};
+	
+	static int dirOdd[][] = {
+		{1,0},
+		{-1,0},
+		{1,1},
+		{1,-1},
+		{0,1},
+		{0,-1}
+	};
+	
+	static void dfs(int i, int j, int cnt, int sum){
+		
+		if ( cnt ==4){
+			if ( sum > ans) ans = sum;
+			return;
+		}
+		
+		if ( j % 2 == 0){
+			for ( int c[] : dirEven){
+				int nx = i + c[0];
+				int ny = j + c[1];
+				
+				if ( nx>=0 && ny>=0 && nx<n && ny<m && !visited[nx][ny]){
+					visited[nx][ny] = true;
+					dfs(nx, ny, cnt+1, sum+a[nx][ny]);
+					if ( cnt == 2) dfs( i, j, cnt+1, sum+a[nx][ny]);
+					visited[nx][ny] = false;
+				}
+			}
+		}else{
+			for ( int c[] : dirOdd){
+				int nx = i + c[0];
+				int ny = j + c[1];
+				
+				if ( nx>=0 && ny>=0 && nx<n && ny<m && !visited[nx][ny]){
+					visited[nx][ny] = true;
+					dfs(nx, ny, cnt+1, sum+a[nx][ny]);
+					if ( cnt == 2) dfs( i, j, cnt+1, sum+a[nx][ny]);
+					visited[nx][ny] = false;
+				}
+			}
+			
+		}
+		
+	}
+	
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc =sc.nextInt();
+		for ( int t=1; t<=tc; t++){
+			n = sc.nextInt();
+			m = sc.nextInt();
+			a= new int[n+5][m+5];
+			visited = new boolean[n+5][m+5];
+			for ( int i=0; i<n; i++){
+				for ( int j=0; j<m; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			
+			ans = 0;
+			
+			for ( int i=0; i<n; i++){
+				for ( int j =0; j<m; j++){
+					visited[i][j] = true;
+					dfs(i,j,1,a[i][j]);
+					visited[i][j] = false;
+				}
+			}
+			
+		}
+		
+	}
+
+}
+
+
