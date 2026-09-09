@@ -114,3 +114,98 @@ In “#T” cho phép thử thứ T, tiếp theo là một khoảng cách và in
 #4 41
 
 #5 305
+
+package review;
+
+import java.util.Scanner;
+
+public class HoDen {
+	
+	static int n, sx, sy, ex, ey;
+	static int ans;
+	static int[] p;
+	static Point[] point1, point2;
+	static Point stPoint, enPoint;
+	static boolean[] used;
+	
+	static class Point{
+		int x;
+		int y;
+		int t;
+		Point(int x, int y, int t){
+			this.x = x;
+			this.y = y;
+			this.t = t;
+		}
+	}
+	
+	static int getDis( Point a, Point b){
+		return Math.abs(a.x-b.x) + Math.abs(a.y-b.y);
+	}
+	
+	static void Try(Point current, int total){
+		
+		
+		int timeToEnd = total + getDis(current, enPoint);
+		if ( timeToEnd < ans){
+			ans = timeToEnd;
+			//return;
+		}
+		if ( total > ans) return;
+		
+		for ( int i=0; i<n; i++){
+			if ( !used[i]){
+				
+				used[i] = true;
+				
+				int time1 = total +  getDis(current, point1[i]) + point1[i].t;
+				Try(point2[i], time1);
+				
+				int time2 = total + getDis(current, point2[i]) + point2[i].t;
+				Try(point1[i], time2);
+				
+				used[i] = false;
+			}
+		}
+		
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t=1; t<=tc; t++){
+			n = sc.nextInt();
+			
+			sx= sc.nextInt();
+			sy = sc.nextInt();
+			stPoint = new Point(sx, sy, 0);
+			
+			ex = sc.nextInt();
+			ey = sc.nextInt();
+			enPoint = new Point(ex, ey, 0);
+			
+			point1 = new Point[n];
+			point2 = new Point[n];
+			for ( int i=0; i<n; i++){
+				int x1 = sc.nextInt();
+				int y1 = sc.nextInt();
+				int x2 = sc.nextInt();
+				int y2 = sc.nextInt();
+				int time = sc.nextInt();
+				point1[i] = new Point(x1, y1, time);
+				point2[i] = new Point(x2, y2, time);
+				
+			}
+			used = new boolean[n+5];
+			
+			ans = Integer.MAX_VALUE;
+			
+			Try(stPoint, 0);
+			
+			System.out.println("#" + t +  " " + ans);
+			
+		}
+	}
+
+}
+
