@@ -1,1 +1,235 @@
-
+bạn hãy chia các bài sau theo từng dạng để tôi dễ dàng ôn tập các ô màu đỏ là lửa, lửa lan ra 4 hướng (trên dưới trái phải) sau 1 giờ
+các ô trống là đất, đi qua ô đất mất 1 giờ
+các ô màu xanh dương là hồ nước, đi qua hồ nước mất 2 giờ
+các ô màu xanh lá là ô có lối ra
+các ô có số là số lượng kim cương
+cần thoát ra khỏi rừng với số kim cương lớn nhất
+không được quay lại ô đã đi qua
+(Đề đầy đủ)
+Có thử thách dành cho Hugo như sau: Hugo được thả vào 1 khu rừng có rất nhiều kim cương, tuy nhiên đồng thời lúc đó có các đám
+cháy xuất hiện. Các đám cháy này sẽ lây lan ra các khu vực lân cận theo bốn hướng sau 1 giờ. Tuy nhiên trong khu rừng có một
+số hồ nhỏ, và lửa không thể cháy lan trên hồ.
+Thời gian để Hugo di chuyển giữa các khu đất là 1 giờ, qua khu hồ là 2 giờ. Hãy giúp Hugo thoát khỏi khu rừng cùng với số lượng
+kim cương lớn nhất có thể và đảm bảo Hugo không bị lửa thiêu.
+Lưu ý khu rừng chỉ tồn tại một số lượng nhất định lối thoát, tại ranh giới của khu rừng, và Hugo không bao giờ quay lại khuk vực
+mình đã đi qua.o
+Input
+Dòng đầu là số lượng test case T (T <= 50).
+Dòng đầu của mỗi test case là 4 số N, M, SR, SC tương ứng là số hàng, số cột của khu rừng và tọa độ hàng, cột mà Hugo đang đứng. ( 4 <= N, M <= 15).
+3 dòng tiếp theo, bắt đầu của mỗi dòng tương ứng là số lượng K các đám cháy hiện có, các hồ và các lối thoát, 2K số tiếp theo trên dòng là tọa độ tương ứng. N dòng tiếp theo sẽ là bản đồ mô tả số lượng kim cương D tại mỗi khu vực trong khu rừng. (0 <= D <= 1000)
+Output
+In mỗi test case trên 2 dòng, dòng đầu tiên là "Case #x", với x là số thứ tự của test case.
+Dòng tiếp theo là số lượng kim cương lớn nhất mà Hugo có thể thu được, nếu Hugo không thể thoát ra khỏi khu rừng, in ra -1.
+Sample:
+Input
+5 <- Số lượng test case
+4 4 1 2 <- Test case 1, khu rừng có kích thước 4x4, Hugo đang ở ô (1, 2)
+2 1 1 4 1 <- 2 Khu vực bắt đầu cháy ở (1, 1) và (4, 1)
+4 1 3 2 1 3 3 3 4 <- 4 Khu vực là hồ ở (1, 3), (2, 1), (3, 3) và (3, 4)
+2 2 4 3 4 <- 2 lối thoát ở ô (2, 4) và (3, 4)
+0 0 10 20 <- Số lượng kim cương hàng 1
+9 3 2 5 <- Số lượng kim cương hàng 2
+0 0 0 0 <- Số lượng kim cương hàng 3
+0 10 0 100 <- Số lượng kim cương hàng 4
+Output
+Case #1
+10  <- Số lượng kim cương lớn nhất mà Hugo có thể thu được
+Case #2
+45
+Case #3
+250
+Case #4
+643
+Case #5
+328
+Hugo thi chạy:
+(TL; DR)
+Có 5 kiểu chạy, mỗi kiểu sẽ tốn số năng lượng nhất định  và thời gian chạy hết 1km là khác nhau.
+mỗi kiểu chạy sẽ sử dụng cho 1km
+bắt buộc phải chạy đủ cả 5 kiểu chạy
+hugo có năng lượng có hạn
+quãng đường cần chạy dài D km
+cho thông tin 5 kiểu chạy gồm số phút, số giây (m <= 6, s <= 60) và số năng lượng tiêu tốn
+hãy tính thời gian ngắn nhất để hugo về đích
+(Đề đầy đủ)
+Sắp tới công ty Hugo làm việc tổ chức sự kiện Olympic dành cho toàn bộ nhân viên. Có rất nhiều bộ môn thi đấu như Bóng bàn, cầu long, cờ vua, cờ tướng, bơi lội, và có cả thể thao điện tử nữa. Là một người quan tâm tới sức khỏe của bản thân vì vậy Hugo thường xuyên chạy bộ để rèn luyện sức khỏe. Thật may trong các môn thi đấu Olympic có hạng mục này. Trong quá trình tập luyện Hugo đã luyện cho mình được 5 kiểu chạy khác nhau, mỗi kiểu chạy sẽ tiêu tốn số lượng năng lượng nhất định và thời gian chạy hết 1km là khác nhau. Mỗi kiểu chạy sẽ sử dụng cho 1km.
+Năng lượng của Hugo là có hạn, nếu sử dụng vượt Hugo sẽ bị bệnh.
+Sau khi tham khảo thông tin Hugo biết được quãng đường cần chạy bộ D của cuộc thi. Nhân viên y tế có thể giúp Hugo tính toán được số năng lượng tối đa của Hugo.
+Cho thông tin của 5 kiểu chạy của Hugo bao gồm số phút, số giây (số phút <= 6 và số giây <= 60) và số năng lượng tiêu tốn.
+Hãy tính thời gian ngắn nhất để Hugo về đích mà không bị bệnh.
+ 
+Input
+Dòng đầu số test T (T<=50)
+Mỗi test bao gồm 2 dòng
+Dòng 1 chứa số năng lượng tối đa M <=60 và chiều dài quãng đường D<=40km
+Dòng thứ 2 chứa thông tin của 5 kiểu chạy lần lượt là số phút, số giây, số năng lượng tiêu tốn
+ 
+Output
+In ra thời gian ngắn nhất để Hugo về đích mà không bị bệnh theo dạng số phút, số giây. Nếu không thể hãy in ra -1
+ 
+Input
+4
+297 10
+5 38 23 5 22 12 4 16 6 5 38 20 0 20 17
+192 10
+2 6 12 6 5 24 2 22 22 4 13 12 4 30 16
+503 10
+1 42 20 1 8 14 0 33 15 2 6 6 5 3 16
+122 10
+2 37 21 3 59 22 6 0 22 4 56 5 0 9 10
+ 
+Output
+Case #1
+3 20
+Case #2
+21 0
+Case #3
+5 30
+Case #4
+1 30
+Hugo về nhà:
+Cổng
+1
+2
+3
+4
+5
+6
+7
+Số lượng binh lính
+10
+70
+80
+20
+50
+30
+10
+Chi phí
+100
+5
+15
+60
+90
+80
+10
+Lựa chọn
+pass
+hire
+hire
+battle
+battle
+battle
+pass
+Chi phí
+100
+110
+140
+150
+Hugo đang trên đường về nhà và cần đi qua 1 đoạn đường B.
+Trên đoạn đường đi qua có N cổng. Tại mỗi cổng có 1 số lượng binh sĩ và giá để đi qua cổng đó. Muốn đi qua mỗi cổng Hugo có 3 cách lựa chọn.
+1. Pass
+Trả số tiền quy định ở cổng đó để được đi qua
+2. Hire
+Trả gấp đôi số tiền ở cổng đó để thuê số binh sĩ gộp vào đoàn quân của mình
+3. battle
+Điều kiện để đánh nhau là số quân của Hugo >= số lượng lính tại cổng đó. Có các lưu ý:
++ Hugo k được tính vào số lượng của quân
++ Mỗi người lính chỉ tham gia được vào tối đa 3 trận đánh. Sau 3 trận đánh nếu đi nhóm binh sĩ đó còn sống thì cũng giải tán.
++ Mỗi trận đánh thì tất cả số binh sĩ đều tham gia.
++ Đánh nhau chết theo tỉ lệ 1: 1. Ai tham gia trước sẽ bị chết trước
+Input:
+Dòng đầu tiên là số lượng trường hợp thử nghiệm
+Mỗi trường hợp thử nghiệm sẽ có
+          Dòng đầu tiên chứa số lượng cổng N
+          N dòng tiếp theo chứa 2 số là số binh lính và chi phí tại mỗi cổng
+Output: In ra chi phí nhỏ nhất Hugo có thể đi qua đoạn đường B
+Điều kiện input: số cổng <=20
+-      2 <=Số lính và chi phí đi qua <=1000
+VD:
+Input
+2
+7
+10 100
+70 5
+80 15
+20 60
+50 90
+30 80
+10 10
+9
+600 800
+300 400
+300 400
+1000 400
+300 600
+100 300
+600 300
+600 500
+1000 300
+Output:
+#1 150
+#2 3000
+Hugo đào vàng:
+Sau khi ăn trộm được mật của chị ong nâu và say sưa thưởng thức mật ngọt say đắm thì bất ngờ Hugo bị chị ong nâu phát hiện. Mặc dù đã thành khẩn nhận lỗi và xin lỗi chị ong nâu nhưng do đã đánh chén gần hết số mật đã ăn trộm nên chị ong nâu vẫn bắt Hugo phải bồi thường số mật đó. Hugo thì làm sao có thể kiếm mật được vì vậy Hugo phải đi đào vàng kiếm tiền để có tiền mua mật trả cho chị ong nâu.
+Một cách tình cờ Hugo có được bản đồ của một khu vực chứa vàng, bản đồ được vẽ dựa trên một ma trận NxN. Trong ma trận có các điểm chứa vàng có thể khai thác (Tối đa 4 điểm). Hàng ngày Hugo sẽ phải đi tới mỏ vàng để khai thác và cuối ngày sẽ phải mang vàng trở về. Để tiết kiệm chi phí và thời gian, Hugo quyết định cắm trại trên gần mỏ vàng để tiện khai thác vàng. Hugo không thể di chuyển qua khu vực đá và không thể cắm trại trên đá, đồng thời Hugo cũng không thể cắm trại tại khu vực mỏ vàng, thời gian để Hugo di chuyển qua mỗi ô là 1 giờ.
+Hãy giúp Hugo tìm địa điểm tối ưu để đi khai thác tất cả các mỏ vàng nhanh nhất.
+X
+Ma trận NxN
+Được cắm trại tại điểm X bất kì nhưng không thể cắm trại trên đá và vàng
+1: đường đi hoặc vàng
+0: đá
+Hãy tính chi phí nhỏ nhất để đi từ trại tới điểm đào vàng xa nhất
+[Input]
+Số trường hợp thử nghiệm T (T ≤ 50)
+Mỗi TC :
+ - Dòng đầu tiên chứa kích thước ma trận N (N ≤ 20) và số mỏ vàng G (2 ≤ G ≤ 4)
+ - G dòng tiếp theo đưa ra vị trí R (hàng) & C (cột) của mỏ vàng (Chỉ số bắt đầu từ 1)
+- N dòng tiếp theo là thông tin ma trận: 1 là có đường đi và vị trí mỏ vàng, 0 là đá (không thể đi qua).
+[Output]
+Dòng đầu tiên: In ra chi phí nhỏ nhất để đi từ trại tới điểm đào vàng xa nhất. Nếu không thể tiếp cận tất cả các mỏ vàng, in ra -1
+Nếu có bất kỳ mỏ vàng nào không thể tiếp cận, bạn nên in ra vị trí của chúng trên mỗi dòng theo thứ tự đã nhập vào. Bạn nên đặt vị trí trại sao cho Hugo có thể tiếp cận được nhiều mỏ vàng nhất có thể. Ưu tiên các mỏ vàng xuất hiện trước theo thứ tự nhập.
+Input:
+3
+5 2
+4 3
+3 4
+1 1 0 0 0
+1 1 0 0 0
+1 1 1 1 1
+1 1 1 0 1
+1 1 1 1 1
+8 2
+5 6
+6 4
+1 1 1 1 1 1 0 0
+1 1 1 1 1 1 1 0
+1 1 0 1 0 1 1 0
+1 1 1 1 0 1 1 0
+1 1 1 1 1 1 1 0
+1 1 1 1 1 1 1 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+10 3
+8 2
+5 3
+7 1
+0 0 0 1 1 1 1 1 1 0
+1 1 1 1 1 1 1 1 1 0
+1 0 0 1 0 0 0 0 1 0
+1 1 1 1 1 1 1 1 1 1
+1 1 1 1 0 1 0 0 1 1
+1 1 1 1 0 1 0 0 1 1
+1 1 1 1 0 1 0 0 1 1
+1 1 1 1 1 1 1 1 1 1
+1 1 1 0 0 1 0 0 1 1
+1 1 1 1 1 1 1 1 1 1
+Output:
+Case #1
+1
+Case #2
+2
+Case #3
+2
+Hugo bán dầu:
+(Đề thi năm ngoái :v)
+Hugo được giao bán dầu trên một mạng lưới đường ống dẫn dầu, mỗi một vị trí sẽ thiết lập một loại đường ống khác nhau
