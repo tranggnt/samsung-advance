@@ -1,3 +1,24 @@
+Mô tả bài toán
+
+Bạn có một tập hợp các điểm có thể đặt cửa hàng pizza và một tập hợp các điểm khách hàng. Mục tiêu là chọn k cửa hàng từ m vị trí có sẵn sao cho tối đa hóa tổng số khách hàng có thể phục vụ.
+
+Chi tiết:
+
+Input:
+
+k: số cửa hàng cần mở
+r: bán kính phục vụ của mỗi cửa hàng (khách hàng phải ở trong vòng tròn bán kính r từ cửa hàng)
+m: số lượng vị trí ứng viên để mở cửa hàng
+Tiếp theo là m điểm (x, y) - tọa độ các vị trí ứng viên
+n: số lượng điểm khách hàng
+Tiếp theo là n điểm (x, y, s) - tọa độ khách hàng và s là số khách hàng tại điểm đó
+Output:
+
+Tổng số khách hàng tối đa mà k cửa hàng có thể phục vụ
+Điều kiện:
+
+Một khách hàng được phục vụ nếu khoảng cách từ khách hàng đến ít nhất 1 cửa hàng ≤ r
+Mỗi khách hàng chỉ được tính một lần (ngay cả khi nằm trong vòng phục vụ của nhiều cửa hàng)
 package review;
 
 import java.awt.print.Book;
