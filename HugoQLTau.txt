@@ -1082,3 +1082,92 @@ Case #4
 Case #5
 
 339
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+struct Gate {
+    int pos;
+    int citizens;
+};
+
+int N;
+Gate gates[3];
+int order[3];      // Lưu thứ tự mở cửa (ví dụ: 0, 1, 2)
+bool visited_gate[3];
+bool seats[65];    // Mảng đánh dấu ghế đã có người ngồi hay chưa (1 đến N)
+int min_total_dist;
+
+// Hàm mô phỏng xếp chỗ cho cửa thứ 'gate_idx' trong chuỗi thứ tự 'order'
+void solve_gate(int gate_idx, int current_dist) {
+    // Nếu đã xếp xong cả 3 cửa
+    if (gate_idx == 3) {
+        if (current_dist < min_total_dist) {
+            min_total_dist = current_dist;
+        }
+        return;
+    }
+
+    int current_gate = order[gate_idx];
+    int p = gates[current_gate].pos;
+    int c = gates[current_gate].citizens;
+
+    // Bản sao tạm thời của trạng thái ghế để xếp cho cửa này
+    // (hoặc bạn có thể đánh dấu trực tiếp rồi backtrack)
+    
+    int processed = 0;
+    int dist = 0;
+    int gate_dist_sum = 0;
+
+    // Giữ lại vị trí trống để xử lý người cuối cùng nếu có tranh chấp
+    int last_left = -1, last_right = -1, last_dist = -1;
+
+    while (processed < c) {
+        // Tìm kiếm các ghế trống từ khoảng cách gần nhất (dist = 0 là tại cửa)
+        // Lưu ý công thức tính khoảng cách của đề bài: tại cửa là 1m, cách 1 ghế là 2m... -> khoảng cách = dist + 1
+        
+        // ... (Đoạn này bạn viết logic duyệt tìm ghế trống bên trái và bên phải) ...
+        // Nếu là người cuối cùng (processed == c - 1) và cả hai bên trái/phải đều trống ở cùng khoảng cách 'dist'
+        // Bạn sẽ lưu lại thông tin để phân nhánh chọn ghế dưới đây.
+    }
+
+    // Nếu người cuối cùng rơi vào trường hợp tranh chấp 2 ghế cách đều:
+    if (tranh_chap) {
+        // Nhánh 1: Chọn bên trái
+        seats[last_left] = true;
+        solve_gate(gate_idx + 1, current_dist + gate_dist_sum_hành_khách_trước + (last_dist + 1));
+        seats[last_left] = false; // Backtrack
+
+        // Nhánh 2: Chọn bên phải
+        seats[last_right] = true;
+        solve_gate(gate_idx + 1, current_dist + gate_dist_sum_hành_khách_trước + (last_dist + 1));
+        seats[last_right] = false; // Backtrack
+    } else {
+        // Nếu không tranh chấp, chỉ có 1 lựa chọn duy nhất cho người cuối
+        // Xếp nốt người cuối, gọi solve_gate(gate_idx + 1, ...) rồi backtrack lại ghế đó.
+    }
+}
+
+// Hàm quay lui sinh 6 hoán vị thứ tự mở cửa
+void back_track_gate_order(int idx) {
+    if (idx == 3) {
+        // Reset trạng thái tàu về trống hoàn toàn trước khi thử thứ tự mới
+        for (int i = 1; i <= N; i++) seats[i] = false;
+        solve_gate(0, 0);
+        return;
+    }
+
+    for (int i = 0; i < 3; i++) {
+        if (!visited_gate[i]) {
+            visited_gate[i] = true;
+            order[idx] = i;
+            back_track_gate_order(idx + 1);
+            visited_gate[i] = false;
+        }
+    }
+}
+
