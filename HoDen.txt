@@ -1,0 +1,116 @@
+Hố đen
+Một con tàu vũ trụ phải đi từ vị trí A đến vị trí B
+
+Có N hố đen ở giữa 2 điểm A và B này và nó có các tính chất sau:
+
+    - Mỗi hố đen đều có 2 đầu, có thể vào và ra ở bất kỳ đầu nào. 
+
+    - Thời gian di chuyển giữa 2 đầu bên trong hố đen là Pi
+
+Thời gian để di chuyển bên ngoài hố đen giữa hai điểm (x1, y1) và (x2, y2) được đưa ra bởi công thức |x1 - x2| + |y1 - y2| trong đó, (x1, y1) và (x2, y2) là tọa độ của hai điểm. 
+
+Bằng cách sử dụng các hố đen, hãy tìm thời gian nhanh nhất để đi từ A đến B.
+
+Lưu ý: Không nhất thiết phải sử dụng tất cả các hố đen.
+
+ 
+
+[Giới hạn]
+
+ 
+
+1. Số lượng hố đen N lớn hơn hoặc bằng 0 và nhỏ hơn hoặc bằng 5 (0 ≤ N ≤ 5).
+
+2. Thời gian để di chuyển qua một hố đen Ki lớn hơn hoặc bằng 0 và nhỏ hơn hoặc bằng 3,000. (0 ≤ Ki ≤ 3,000)
+
+3. X, Y, tọa độ trong vũ trụ lớn hơn hoặc bằng 0 và nhỏ hơn hoặc bằng 1,000. (0 ≤ X, Y ≤ 1,000)
+
+4. Không có trường hợp nào mà tọa độ của điểm bắt đầu, điểm đích của tàu vũ trụ và tọa độ của những hố đen giống nhau.
+
+ 
+
+[Input]
+
+ 
+
+Dòng đầu chứa số trường hợp thử nghiệm T (T <= 50)
+
+Với mỗi trường hợp thử nghiệm
+
+    - Dòng đầu tiên biểu thị số lượng hố đen N 
+
+    - Dòng tiếp theo biểu thị toạ độ bắt đầu và đích đến của con tàu.
+
+    - N dòng tiếp theo, mỗi dòng biểu thị thông tin của các hố đen:
+
+        • 2 giá trị đầu tiên biểu thị toạ độ thứ nhất của hố đen
+
+        • 2 giá trị tiếp theo biểu thị toạ độ thứ hai của hố đen
+
+        • Giá trị cuối cùng (Pi) biểu thị thời gian đi qua hố đen đó.
+
+ 
+
+[Output]
+
+ 
+
+In “#T” cho phép thử thứ T, tiếp theo là một khoảng cách và in câu trả lời (T là số thứ tự của phép thử bắt đầu từ 1).
+
+ 
+
+[Input]
+
+ 
+
+5
+
+0
+
+0 0 60 60
+
+1
+
+0 0 2 0
+
+1 0 1 2 0
+
+1
+
+0 0 60 60
+
+40 40 20 20 10
+
+2
+
+100 50 10 5
+
+80 40 10 6 10
+
+80 10 70 40 5
+
+3
+
+500 500 1000 1000
+
+501 501 999 999 1000
+
+1 1 499 499 100
+
+1000 999 0 0 200
+
+ 
+
+[Output]
+
+ 
+
+#1 120
+
+#2 2
+
+#3 90
+
+#4 41
+
+#5 305
