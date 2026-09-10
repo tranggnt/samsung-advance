@@ -67,3 +67,401 @@ Case #5
 
 328
 
+import java.util.Scanner;
+
+public class Main {
+
+    static int n, m;
+    static int startR, startC;
+
+    static int[][] diamond;
+
+    // type:
+    // 0 = đất
+    // 1 = hồ
+    // 2 = lối thoát
+    static int[][] type;
+
+    // fireTime[i][j] = thời gian sớm nhất lửa tới ô (i,j)
+    // Integer.MAX_VALUE = lửa không thể tới
+    static int[][] fireTime;
+
+    static boolean[][] visited;
+
+    static int[] exitR;
+    static int[] exitC;
+    static int exitCount;
+
+    static int maxDiamond;
+
+    static int[] dx = {-1, 1, 0, 0};
+    static int[] dy = {0, 0, -1, 1};
+
+
+    // =========================================================
+    // POINT
+    // =========================================================
+
+    static class Point {
+        int r;
+        int c;
+
+        Point(int r, int c) {
+            this.r = r;
+            this.c = c;
+        }
+    }
+
+
+    // =========================================================
+    // QUEUE TỰ CÀI ĐẶT CHO BFS
+    // =========================================================
+
+    static class Queue {
+        Point[] data;
+        int front;
+        int rear;
+
+        Queue(int size) {
+            data = new Point[size];
+            front = 0;
+            rear = 0;
+        }
+
+        void push(Point p) {
+            data[rear++] = p;
+        }
+
+        Point pop() {
+            return data[front++];
+        }
+
+        boolean isEmpty() {
+            return front == rear;
+        }
+    }
+
+
+    // =========================================================
+    // BFS TÍNH THỜI GIAN LỬA TỚI MỖI Ô
+    // =========================================================
+
+    static void bfsFire() {
+
+        Queue queue = new Queue(n * m);
+
+        // Ban đầu chưa có ô nào lửa tới
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                fireTime[i][j] = Integer.MAX_VALUE;
+            }
+        }
+
+        // Đưa tất cả vị trí đang cháy vào queue
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+
+                if (type[i][j] == 3) {
+                    fireTime[i][j] = 0;
+                    queue.push(new Point(i, j));
+                }
+            }
+        }
+
+
+        // BFS
+        while (!queue.isEmpty()) {
+
+            Point cur = queue.pop();
+
+            for (int d = 0; d < 4; d++) {
+
+                int nr = cur.r + dx[d];
+                int nc = cur.c + dy[d];
+
+                // Ra ngoài bản đồ
+                if (nr < 0 || nr >= n || nc < 0 || nc >= m) {
+                    continue;
+                }
+
+                // Lửa không cháy qua hồ
+                if (type[nr][nc] == 1) {
+                    continue;
+                }
+
+                // Đã có thời gian cháy sớm hơn
+                if (fireTime[nr][nc] != Integer.MAX_VALUE) {
+                    continue;
+                }
+
+                fireTime[nr][nc] = fireTime[cur.r][cur.c] + 1;
+
+                queue.push(new Point(nr, nc));
+            }
+        }
+    }
+
+
+    // =========================================================
+    // KIỂM TRA HUGO CÓ THỂ ĐI VÀO Ô (r,c) KHÔNG
+    // =========================================================
+
+    static boolean canGo(int r, int c, int newTime) {
+
+        // Đã đi qua rồi
+        if (visited[r][c]) {
+            return false;
+        }
+
+        /*
+         * Nếu là hồ:
+         * - lửa không thể tới
+         * - luôn an toàn về mặt lửa
+         *
+         * Nếu là đất:
+         * Hugo phải tới trước khi lửa tới.
+         */
+        if (type[r][c] == 1) {
+            return true;
+        }
+
+        return newTime < fireTime[r][c];
+    }
+
+
+    // =========================================================
+    // DFS BACKTRACKING
+    // =========================================================
+    //
+    // r, c     : vị trí hiện tại
+    // time     : thời gian Hugo đã đi
+    // diamonds : số kim cương đang có
+    //
+    // =========================================================
+
+    static void dfs(int r, int c, int time, int diamonds) {
+
+        // Nếu đã tới lối thoát
+        if (type[r][c] == 2) {
+
+            if (diamonds > maxDiamond) {
+                maxDiamond = diamonds;
+            }
+
+            // Đã thoát khỏi rừng -> không đi tiếp
+            return;
+        }
+
+
+        // Thử đi 4 hướng
+        for (int d = 0; d < 4; d++) {
+
+            int nr = r + dx[d];
+            int nc = c + dy[d];
+
+
+            // Ra ngoài rừng
+            if (nr < 0 || nr >= n || nc < 0 || nc >= m) {
+                continue;
+            }
+
+
+            // Thời gian di chuyển
+            int moveTime;
+
+            if (type[nr][nc] == 1) {
+                // Đi qua hồ mất 2 giờ
+                moveTime = 2;
+            } else {
+                // Đi qua đất mất 1 giờ
+                moveTime = 1;
+            }
+
+            int newTime = time + moveTime;
+
+
+            // Không thể đi vào ô không an toàn
+            if (!canGo(nr, nc, newTime)) {
+                continue;
+            }
+
+
+            // =================================================
+            // ĐI VÀO Ô MỚI
+            // =================================================
+
+            visited[nr][nc] = true;
+
+            dfs(
+                nr,
+                nc,
+                newTime,
+                diamonds + diamond[nr][nc]
+            );
+
+
+            // =================================================
+            // BACKTRACK
+            // =================================================
+
+            visited[nr][nc] = false;
+        }
+    }
+
+
+    // =========================================================
+    // MAIN
+    // =========================================================
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int T = sc.nextInt();
+
+        for (int tc = 1; tc <= T; tc++) {
+
+            n = sc.nextInt();
+            m = sc.nextInt();
+
+            // Input thường dùng tọa độ 1-based
+            startR = sc.nextInt() - 1;
+            startC = sc.nextInt() - 1;
+
+
+            diamond = new int[n][m];
+            type = new int[n][m];
+            fireTime = new int[n][m];
+            visited = new boolean[n][m];
+
+
+            /*
+             * type:
+             *
+             * 0 = đất
+             * 1 = hồ
+             * 2 = lối thoát
+             * 3 = đám cháy
+             */
+
+
+            // Ban đầu tất cả là đất
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    type[i][j] = 0;
+                }
+            }
+
+
+            // =================================================
+            // ĐỌC CÁC ĐÁM CHÁY
+            // =================================================
+
+            int fireCount = sc.nextInt();
+
+            for (int i = 0; i < fireCount; i++) {
+
+                int r = sc.nextInt() - 1;
+                int c = sc.nextInt() - 1;
+
+                type[r][c] = 3;
+            }
+
+
+            // =================================================
+            // ĐỌC CÁC HỒ
+            // =================================================
+
+            int lakeCount = sc.nextInt();
+
+            for (int i = 0; i < lakeCount; i++) {
+
+                int r = sc.nextInt() - 1;
+                int c = sc.nextInt() - 1;
+
+                type[r][c] = 1;
+            }
+
+
+            // =================================================
+            // ĐỌC CÁC LỐI THOÁT
+            // =================================================
+
+            exitCount = sc.nextInt();
+
+            exitR = new int[exitCount];
+            exitC = new int[exitCount];
+
+            for (int i = 0; i < exitCount; i++) {
+
+                int r = sc.nextInt() - 1;
+                int c = sc.nextInt() - 1;
+
+                exitR[i] = r;
+                exitC[i] = c;
+
+                type[r][c] = 2;
+            }
+
+
+            // =================================================
+            // ĐỌC MA TRẬN KIM CƯƠNG
+            // =================================================
+
+            for (int i = 0; i < n; i++) {
+
+                for (int j = 0; j < m; j++) {
+
+                    diamond[i][j] = sc.nextInt();
+                }
+            }
+
+
+            // =================================================
+            // BƯỚC 1: BFS LỬA
+            // =================================================
+
+            bfsFire();
+
+
+            // =================================================
+            // KIỂM TRA Ô BẮT ĐẦU
+            // =================================================
+
+            /*
+             * Nếu Hugo bắt đầu ở vị trí đã cháy
+             * thì không thể thực hiện.
+             */
+
+            if (type[startR][startC] != 1 &&
+                fireTime[startR][startC] <= 0) {
+
+                maxDiamond = -1;
+
+            } else {
+
+                maxDiamond = -1;
+
+                visited[startR][startC] = true;
+
+                dfs(
+                    startR,
+                    startC,
+                    0,
+                    diamond[startR][startC]
+                );
+            }
+
+
+            // =================================================
+            // OUTPUT
+            // =================================================
+
+            System.out.println("Case #" + tc);
+            System.out.println(maxDiamond);
+        }
+
+        sc.close();
+    }
+}
+
