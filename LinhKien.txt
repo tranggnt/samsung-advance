@@ -1,0 +1,122 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package advanced;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author Admin
+ */
+public class LinhKien {
+    static int n, m;
+    static int[] price, comboPrice, comboCount;
+    static  int[][] combo; 
+    
+    
+    static boolean[] need, bought;
+    
+    static int ans;
+    
+    static boolean  useful( int i){
+        for ( int j=0; j<comboCount[i]; j++){
+            int x = combo[i][j];
+            
+            if ( need[x] && !bought[x]){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    static void Try( int idx, int cost){
+        if ( cost >= ans) return;
+        
+        if ( idx == m){
+            int total = cost;
+            
+            // linh kien can nhung chua mua=> mua le
+            for ( int i=1; i<n; i++){
+                if ( need[i] && !bought[i]){
+                    total += price[i];
+                }
+            }
+            
+            if ( total < ans){
+                ans = total;
+            }
+            return;
+        }
+        
+        // th1: khong mua combo idx
+        Try(idx+1, cost);
+        
+        //th2: mua combo idx
+        if ( useful(idx)){
+            boolean[] change = new boolean[n+1];
+            for ( int j=0; j<comboCount[idx]; j++){
+                int x = combo[idx][j];
+                if ( !bought[x]){
+                    bought[x] = true;
+                    change[x] = true;
+                }
+            }
+            
+            Try(idx+1, cost + comboPrice[idx]);
+            
+            //backtrack
+            for ( int j=0; j<comboCount[idx]; j++){
+                int x = combo[idx][j];
+                if ( change[x]){
+                    bought[x] = false;
+                }
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int tc = sc.nextInt();
+        for ( int t =1; t<=tc; t++){
+            n = sc.nextInt();
+            price = new int[n+1];
+            
+            for ( int i=1; i<=n; i++){
+                price[i] = sc.nextInt();
+            }
+            
+            m = sc.nextInt();
+            
+            comboPrice = new int[m];
+            comboCount = new int[m];
+            combo = new int [m][];
+            
+            for ( int i=0; i<m; i++){
+                comboPrice[i] = sc.nextInt();
+                
+                comboCount[i] = sc.nextInt();
+                
+                for ( int j=0; j<comboCount[i]; j++){
+                    combo[i][j] = sc.nextInt();
+                }
+            }
+            
+            int L = sc.nextInt();
+            
+            need = new boolean[n+1];
+            for ( int i=0; i<L; i++){
+                int x = sc.nextInt();
+                need[x] = true;
+            }
+            
+            bought = new boolean[n+1];
+            ans = Integer.MAX_VALUE;
+            Try(0,0);
+            System.out.println(ans);
+            
+        }
+    }
+    
+}
