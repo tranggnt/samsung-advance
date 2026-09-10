@@ -123,3 +123,80 @@ Output
 2
 
 12
+
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package advanced;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author Admin
+ */
+public class TheSettlersOfCatan {
+    
+    static int n, m, ans;
+    static boolean []visited;
+    static Edge[] canh;
+    
+    static class Edge{
+        int u; int v;
+        Edge(int u, int v){
+            this.u = u;
+            this.v = v;
+        }
+    }
+    
+    static void dfs(int u, int length){
+        ans = Math.max(ans, length);
+        for ( int i=0; i<m; i++){
+            if( visited[i]){
+                continue;
+            }
+            
+            Edge e = canh[i];
+            
+            //canh e khong noi voi node hien tai
+            if ( e.u != u && e.v!= u) continue;
+            
+            int next;
+            
+            if ( e.u == u) next = e.v;
+            else next = e.u;
+            
+            visited[i] = true;
+            dfs(next, length+1);
+            
+            visited[i] = false;
+                    
+        }
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int tc = sc.nextInt();
+        for ( int t =1; t<=tc; t++){
+            n = sc.nextInt();
+            m = sc.nextInt();
+            canh = new Edge[m];
+            for ( int i=0; i<m; i++){
+                int x = sc.nextInt();
+                int y = sc.nextInt();
+                canh[i] = new Edge(x, y);
+            }
+            
+            ans = 0;
+            visited = new boolean[m];
+            for ( int i=0; i<n; i++){
+                dfs(i, 0);
+            }
+            System.out.println(ans);
+        }
+    }
+    
+}
+
