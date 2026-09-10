@@ -1,0 +1,85 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package advanced;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author Admin
+ */
+public class LittleElephant {
+
+    static int n, k, m;
+    static int[] a;
+    static int ans;
+
+    static boolean isSafe() {
+        for (int i = 0; i <= n - k; i++) {
+
+            int max = a[i];
+            for (int j = i; j < i + k; j++) {
+                if (a[j] > max) {
+                    max = a[j];
+                }
+            }
+
+            int cnt = 0;
+            for (int j = i; j < i + k; j++) {
+                if (a[j] == max) {
+                    cnt++;
+                }
+            }
+
+            if (cnt >= m) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static void Try(int idx, int count) {
+
+        if (count >= ans) {
+            return;
+        }
+
+        if (idx == n) {
+            if (isSafe()) {
+                ans = count;
+            }
+            return;
+        }
+
+        Try(idx + 1, count);
+
+        a[idx]++;
+        Try(idx + 1, count + 1);
+        a[idx]--;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int tc = sc.nextInt();
+        for (int t = 1; t <= n; t++) {
+            n = sc.nextInt();
+            k = sc.nextInt();
+            m = sc.nextInt();
+            a = new int[n];
+            for (int i = 0; i < n; i++) {
+                a[i] = sc.nextInt();
+            }
+            ans = Integer.MAX_VALUE;
+            Try(0, 0);
+
+            if (ans == Integer.MAX_VALUE) {
+                ans = -1;
+            }
+
+            System.out.println(ans);
+
+        }
+    }
+}
