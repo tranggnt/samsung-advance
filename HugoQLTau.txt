@@ -1171,3 +1171,400 @@ void back_track_gate_order(int idx) {
     }
 }
 
+
+// code java import java.util.Scanner;
+
+public class Main {
+
+    static int n;
+
+    // position[1] = vị trí cửa 1
+    // position[2] = vị trí cửa 2
+    // position[3] = vị trí cửa 3
+    static int[] position = new int[4];
+
+    // people[1] = số hành khách ở cửa 1
+    // people[2] = số hành khách ở cửa 2
+    // people[3] = số hành khách ở cửa 3
+    static int[] people = new int[4];
+
+    // occupied[i] = true nếu ghế i đã có người
+    static boolean[] occupied;
+
+    // usedDoor[i] = true nếu cửa i đã được mở
+    static boolean[] usedDoor = new boolean[4];
+
+    // Đáp án nhỏ nhất
+    static int answer;
+
+
+    // =========================================================
+    // HÀM XỬ LÝ MỘT CỬA
+    // =========================================================
+    //
+    // door:
+    //      cửa đang mở
+    //
+    // tieChoice:
+    //      nếu có 2 ghế cùng khoảng cách:
+    //      0 = ưu tiên bên trái
+    //      1 = ưu tiên bên phải
+    //
+    // Hàm trả về tổng khoảng cách của hành khách
+    // khi cửa này được mở.
+    //
+    // =========================================================
+
+    static int openDoor(int door, int tieChoice) {
+
+        int totalDistance = 0;
+
+        int remaining = people[door];
+
+        int doorPosition = position[door];
+
+
+        // =====================================================
+        // BƯỚC 1:
+        // Kiểm tra ghế ngay trước cửa
+        // =====================================================
+
+        if (!occupied[doorPosition]) {
+
+            occupied[doorPosition] = true;
+
+            totalDistance += 1;
+
+            remaining--;
+        }
+
+
+        // =====================================================
+        // BƯỚC 2:
+        // Tìm các ghế ở xa dần
+        // =====================================================
+
+        int left = doorPosition - 1;
+        int right = doorPosition + 1;
+
+        int distance = 2;
+
+
+        while (remaining > 1) {
+
+            // -----------------------------
+            // Ghế bên trái
+            // -----------------------------
+
+            if (left >= 1 && !occupied[left]) {
+
+                occupied[left] = true;
+
+                totalDistance += distance;
+
+                remaining--;
+            }
+
+
+            // -----------------------------
+            // Ghế bên phải
+            // -----------------------------
+
+            if (right <= n && !occupied[right]) {
+
+                occupied[right] = true;
+
+                totalDistance += distance;
+
+                remaining--;
+            }
+
+
+            left--;
+            right++;
+
+            distance++;
+
+
+            // Không còn ghế nào nữa
+            if (left < 1 && right > n) {
+                break;
+            }
+        }
+
+
+        // =====================================================
+        // BƯỚC 3:
+        // Nếu còn đúng 1 hành khách
+        //
+        // Lúc này có thể có 2 ghế cùng khoảng cách.
+        // =====================================================
+
+        if (remaining > 0) {
+
+            int leftDistance = distance;
+            int rightDistance = distance;
+
+
+            // -------------------------------------------------
+            // Tìm ghế trống gần nhất bên trái
+            // -------------------------------------------------
+
+            while (left >= 1 && occupied[left]) {
+
+                left--;
+                leftDistance++;
+            }
+
+
+            // -------------------------------------------------
+            // Tìm ghế trống gần nhất bên phải
+            // -------------------------------------------------
+
+            while (right <= n && occupied[right]) {
+
+                right++;
+                rightDistance++;
+            }
+
+
+            // -------------------------------------------------
+            // Chỉ còn bên phải
+            // -------------------------------------------------
+
+            if (left < 1) {
+
+                occupied[right] = true;
+
+                totalDistance += rightDistance;
+            }
+
+
+            // -------------------------------------------------
+            // Chỉ còn bên trái
+            // -------------------------------------------------
+
+            else if (right > n) {
+
+                occupied[left] = true;
+
+                totalDistance += leftDistance;
+            }
+
+
+            // -------------------------------------------------
+            // Cả trái và phải đều còn
+            // -------------------------------------------------
+
+            else {
+
+                if (leftDistance < rightDistance) {
+
+                    // Bên trái gần hơn
+                    occupied[left] = true;
+
+                    totalDistance += leftDistance;
+                }
+
+                else if (rightDistance < leftDistance) {
+
+                    // Bên phải gần hơn
+                    occupied[right] = true;
+
+                    totalDistance += rightDistance;
+                }
+
+                else {
+
+                    // Hai bên bằng nhau
+                    // Có 2 khả năng
+
+                    if (tieChoice == 0) {
+
+                        // Chọn bên trái
+                        occupied[left] = true;
+
+                        totalDistance += leftDistance;
+
+                    } else {
+
+                        // Chọn bên phải
+                        occupied[right] = true;
+
+                        totalDistance += rightDistance;
+                    }
+                }
+            }
+        }
+
+
+        return totalDistance;
+    }
+
+
+    // =========================================================
+    // DFS / BACKTRACKING
+    // =========================================================
+    //
+    // opened:
+    //      số cửa đã mở
+    //
+    // total:
+    //      tổng khoảng cách hiện tại
+    //
+    // =========================================================
+
+    static void backtrack(int opened, int total) {
+
+        // Nếu tổng hiện tại đã >= đáp án
+        // thì không cần đi tiếp
+        if (total >= answer) {
+            return;
+        }
+
+
+        // Đã mở đủ 3 cửa
+        if (opened == 3) {
+
+            answer = total;
+
+            return;
+        }
+
+
+        // Thử chọn từng cửa chưa mở
+        for (int door = 1; door <= 3; door++) {
+
+            if (usedDoor[door]) {
+                continue;
+            }
+
+
+            // =================================================
+            // LƯU TRẠNG THÁI GHẾ
+            // =================================================
+
+            boolean[] saved = new boolean[n + 1];
+
+            for (int i = 1; i <= n; i++) {
+                saved[i] = occupied[i];
+            }
+
+
+            // Đánh dấu cửa đã mở
+            usedDoor[door] = true;
+
+
+            // =================================================
+            // TRƯỜNG HỢP 1:
+            // Nếu có 2 ghế bằng khoảng cách,
+            // chọn bên trái
+            // =================================================
+
+            int costLeft = openDoor(door, 0);
+
+            backtrack(
+                    opened + 1,
+                    total + costLeft
+            );
+
+
+            // Khôi phục ghế
+            for (int i = 1; i <= n; i++) {
+                occupied[i] = saved[i];
+            }
+
+
+            // =================================================
+            // TRƯỜNG HỢP 2:
+            // Nếu có 2 ghế bằng khoảng cách,
+            // chọn bên phải
+            // =================================================
+
+            int costRight = openDoor(door, 1);
+
+            backtrack(
+                    opened + 1,
+                    total + costRight
+            );
+
+
+            // =================================================
+            // BACKTRACK
+            // =================================================
+
+            for (int i = 1; i <= n; i++) {
+                occupied[i] = saved[i];
+            }
+
+            usedDoor[door] = false;
+        }
+    }
+
+
+    // =========================================================
+    // MAIN
+    // =========================================================
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        int T = sc.nextInt();
+
+
+        for (int test = 1; test <= T; test++) {
+
+            // -----------------------------------------------
+            // Số ghế
+            // -----------------------------------------------
+
+            n = sc.nextInt();
+
+            occupied = new boolean[n + 1];
+
+            // Reset cửa
+            for (int i = 1; i <= 3; i++) {
+                usedDoor[i] = false;
+            }
+
+
+            // -----------------------------------------------
+            // Đọc thông tin 3 cửa
+            // -----------------------------------------------
+
+            for (int door = 1; door <= 3; door++) {
+
+                position[door] = sc.nextInt();
+
+                people[door] = sc.nextInt();
+            }
+
+
+            // -----------------------------------------------
+            // Khởi tạo đáp án
+            // -----------------------------------------------
+
+            answer = Integer.MAX_VALUE;
+
+
+            // -----------------------------------------------
+            // Bắt đầu backtracking
+            // -----------------------------------------------
+
+            backtrack(0, 0);
+
+
+            // -----------------------------------------------
+            // Output
+            // -----------------------------------------------
+
+            System.out.println("Case #" + test);
+            System.out.println(answer);
+        }
+
+
+        sc.close();
+    }
+}
+
