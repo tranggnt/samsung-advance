@@ -72,3 +72,103 @@ Case #1
 Case #2
 
 4
+
+package review;
+import java.util.Scanner;
+
+public class SkyForce {
+	
+		
+		public static int n, ans;
+		public static int[][] a;
+		
+		public static boolean[][] bomb;
+		
+		public static int[] dx = {-1,-1,-1};
+		public static int[] dy = {-1,0,1};
+		
+		public static void bom(int x, boolean b) {
+			for (int i = x-1 ; i >= x - 5 && i >= 0 ; i--) {
+				for (int j = 0 ; j < 5 ; j++) {
+					bomb[i][j]=b;
+				}
+			}
+		}
+		
+		public static void backtrack(int x, int y, boolean useBomb, int sum) {
+			if (x==0) {
+				ans = Math.max(ans, sum);
+				return;
+			}
+			
+			// not-use
+			for (int i = 0 ; i < 3 ; i++) {
+				int xx = x + dx[i];
+				int yy = y + dy[i];
+				if (xx >= 0 && xx < n && yy >= 0 && yy < 5) {
+					if (!bomb[xx][yy]) {
+						if (a[xx][yy]==2) {
+							if (sum==0) continue;
+							else backtrack(xx,yy,useBomb, sum-1);
+						} else if (a[xx][yy]==1) {
+							backtrack(xx,yy,useBomb, sum+1);
+						} else {
+							backtrack(xx,yy,useBomb, sum);
+						}
+					} else {
+						if (a[xx][yy]==1) {
+							backtrack(xx,yy,useBomb, sum+1);
+						} else {
+							backtrack(xx,yy,useBomb, sum);
+						}
+					}
+				}
+			}
+			
+			// usebomb
+			if (useBomb==false) {
+				useBomb = true;
+				bom(x,true);
+				for (int i = 0 ; i < 3 ; i++) {
+					int xx = x + dx[i];
+					int yy = y + dy[i];
+					if (xx >= 0 && xx < n && yy >= 0 && yy < 5) {
+						if (a[xx][yy]==1) {
+							backtrack(xx,yy,useBomb, sum+1);
+						} else {
+							backtrack(xx,yy,useBomb, sum);
+						}
+					}
+				}
+				useBomb = false;
+				bom(x,false);
+			}
+		}
+		
+		public static void main (String[] args) {
+			Scanner sc = new Scanner(System.in);
+			
+			int t = sc.nextInt();
+			
+			for (int pp = 1 ; pp <= t ; pp++) {
+				n = sc.nextInt();
+				
+				a = new int[n+1][5];
+				bomb = new boolean[n+1][5];
+				
+				for (int i = 0 ; i < n ; i++) {
+					for (int j = 0 ; j < 5 ; j++) {
+						a[i][j] = sc.nextInt();
+					}
+				}
+				ans = -1;
+				backtrack(n,2,false,0);
+				
+				System.out.println("Case #" + pp);
+				System.out.println(ans);
+			}
+		}
+	}
+
+
+
