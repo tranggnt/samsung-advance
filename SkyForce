@@ -170,5 +170,102 @@ public class SkyForce {
 		}
 	}
 
+package advanced;
+
+import java.util.Scanner;
+
+public class SkyForce {
+	static int n, ans;
+	static boolean[][] bomb;
+	static int [][] a;
+	
+	static int[][] d = {
+		{-1, -1},
+		{-1, 1},
+		{-1, 0}
+	};
+	
+	static void spread(int x, boolean b){
+		for ( int i=x-1; i>=x -5 && i>=0; i-- ){
+			for ( int j=0; j<5; j++){
+				bomb[i][j] = b;
+			}
+		}
+	}
+	
+	static void Try( int x, int y, boolean useBomb, int sum){
+		
+		if ( x == 0){
+			if ( ans < sum) ans = sum;
+			return;
+		}
+		
+		// not use bomb
+		
+		for (int[] c : d) {
+			int nx = x + c[0];
+			int ny = y + c[1];
+			
+			if ( nx >= 0&& nx <n && ny >=0 && ny <5){
+				if ( !bomb[nx][ny]){
+					if ( a[nx][ny] == 2){
+						if ( sum == 0) continue;
+						else Try(nx, ny, useBomb, sum-1);
+					}else {
+						Try(nx, ny, useBomb, sum+a[nx][ny]);
+					}
+				}else {
+					if ( a[nx][ny] == 1){
+						Try(nx, ny, useBomb, sum+1);
+					}else {
+						Try(nx, ny, useBomb, sum);
+					}
+				}
+			}
+		}
+		
+		//use bomb
+		
+		if ( useBomb == false){
+			useBomb = true;
+			spread(x, true);
+			for ( int[] c : d){
+				int nx = x + c[0];
+				int ny= y + c[1];
+				
+				if ( nx >=0 && nx < n && ny >=0 && ny <5){
+					if ( a[nx][ny] == 1){
+						Try(nx, ny, useBomb, sum+1);
+					}else {
+						Try(nx, ny, useBomb, sum);
+					}
+				}
+			}
+			useBomb = false;
+			spread(x, false);
+		}
+	}
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		int tc = sc.nextInt();
+		for ( int t =1; t<=tc; t++){
+			n = sc.nextInt();
+			
+			a = new int [n+1][5];
+			
+			for ( int i=0; i<n; i++){
+				for ( int j =0; j<5; j++){
+					a[i][j] = sc.nextInt();
+				}
+			}
+			bomb = new boolean[n+5][5];
+			
+			ans = -1;
+			Try(n, 2, false, 0);
+			System.out.println(ans);
+		}
+	}
+}
 
 
