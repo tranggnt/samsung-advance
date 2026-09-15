@@ -465,3 +465,224 @@ public class Main {
     }
 }
 
+/////
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package advanced_samsung;
+
+import java.util.Scanner;
+
+/**
+ *
+ * @author Admin
+ */
+public class HugoLua {
+    
+    static int n, m;
+    
+    static int sx, sy;
+    
+    static int[][] diamond;
+    
+    static int[][] type;
+    static int[][] fireTime;
+    static boolean [][] visited;
+    
+    static int[] exitR; 
+    static int[] exitC;
+    static int exitCount;
+    
+    static int maxDiamond;
+    
+    static int[][] d = {
+        {1, 0},
+        {-1, 0},
+        {0, 1},
+        {0, -1}
+    };
+    
+    static class Point{
+        int x;
+        int y;
+        
+        Point(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+    
+    static void bfsFire(){
+        
+        Point[] q = new Point[n*m];
+        int front = 0, rear = 0;
+        for ( int i=0; i<n; i++){
+            for ( int j=0; j<n; j++){
+                fireTime[i][j] = Integer.MAX_VALUE;
+            }
+        }
+        
+        for ( int i=0; i<n; i++){
+            for ( int j=0; j<m; j++){
+                if ( type[i][j] == 3){
+                    fireTime[i][j] = 0;
+                    q[rear++] = new Point(i, j);
+                }
+            }
+        }
+        
+        while(front < rear){
+            Point cur = q[front ++];
+            
+            for ( int c[] : d){
+                int nx = cur.x + c[0];
+                int ny = cur.y + c[1];
+                
+                if ( nx <0 || ny<0 || nx >=n || ny >=m) continue;
+                
+                if ( type[nx][ny] == 1) continue;
+                
+                if ( fireTime[nx][ny] != Integer.MAX_VALUE) continue;
+                
+                fireTime[nx][ny] = fireTime[cur.x][cur.y] +1;
+                
+                q[rear++] = new Point(nx, ny);
+            }
+        }
+    }
+    
+    static boolean canGo(int x, int y, int newTime){
+        
+        if ( visited[x][y]) return false;
+        
+        // neu la ho: lua ko the di toi
+        // neu la dat Hugo phai toi truoc khi lua toi
+        
+        if ( type[x][y] == 1){
+            return true;
+        }
+        
+        return newTime < fireTime[x][y];
+    }
+    
+    
+    // dfs backtracking
+    
+    static void dfs( int x, int y, int time, int kimcuong){
+        
+        //toi loi thoat
+        if ( type[x][y] == 2){
+            if ( kimcuong > maxDiamond){
+                maxDiamond = kimcuong;
+            }
+            return;
+        }
+        
+        for ( int[] c: d){
+            int nx = x + c[0];
+            int ny = y + c[1];
+            
+            if ( nx <0 || ny <0 || nx >=n || ny >=m) continue;
+            
+            int moveTime;
+            
+            if ( type[nx][ny] ==1){
+                moveTime = 2;
+            }else{
+                moveTime = 1;
+            }
+            
+            int newTime = time + moveTime;
+            
+            if ( !canGo(nx, ny, newTime)){
+                continue;
+            }
+            
+            // di vao o moi
+            
+            visited[nx][ny] = true;
+            
+            dfs(nx, ny, newTime, kimcuong + diamond[nx][ny]);
+            
+            //backtrack
+            
+            visited[nx][ny] = false;
+        }
+    }
+    
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        int tc= sc.nextInt();
+        
+        for ( int t =1; t<=tc; t++){
+            n = sc.nextInt();
+            m = sc.nextInt();
+            
+            sx = sc.nextInt() -1;
+            sy = sc.nextInt()-1;
+            
+            diamond = new int[n][m];
+            type = new int[n][m];
+            fireTime = new int[n][m];
+            visited = new boolean[n][m];
+            
+            for ( int i=0; i<n; i++){
+                for ( int j =0; j<m; j++){
+                    type[i][j] = 0;
+                }
+            }
+            
+            int fireCount = sc.nextInt();
+            
+            for ( int i=0; i<fireCount; i++){
+                int x = sc.nextInt()-1;
+                int y = sc.nextInt()-1;
+                
+                type[x][y] = 3;
+            }
+            
+            int lake = sc.nextInt();
+            for ( int i=0; i<lake; i++){
+                int x = sc.nextInt()-1;
+                int y = sc.nextInt()-1;
+                type[x][y] = 1;
+            }
+            
+            exitCount = sc.nextInt();
+            exitR = new int[exitCount];
+            exitC = new int[exitCount];
+            
+            for ( int i=0; i<n; i++){
+                int x = sc.nextInt()-1;
+                int y = sc.nextInt()-1;
+                
+                exitR[i] = x;
+                exitC[i] = y;
+                type[x][y] = 2;
+            }
+            
+            for ( int i=0; i<n; i++){
+                for ( int j=0; j<m; j++){
+                    diamond[i][j] = sc.nextInt();
+                }
+            }
+            
+            bfsFire();
+            
+            if ( type[sx][sy] != 1 && fireTime[sx][sy] <=0){
+                maxDiamond = -1;
+            }else{
+                maxDiamond = -1;
+                
+                visited[sx][sy] = true;
+                
+                dfs(sx,sy,0,diamond[sx][sy]);
+            }
+            
+            System.out.println(maxDiamond);
+        }
+    }
+}
